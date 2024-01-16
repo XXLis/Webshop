@@ -1,6 +1,8 @@
 
 # Webshop Dierenspeeltjes.nl
 
+Dit is het Webshop Project voor e-commerce online winkel.
+
 Functionaliteiten
 
 Productoverzicht: Gebruikers kunnen alle beschikbare producten bekijken.
@@ -60,17 +62,18 @@ webshop/
 
 ## Installatie en Gebruik
 
-Installeren en lokaal uitvoeren van je project.
-De server zal op poort 3000 draaien.
-De producten worden opgeslagen in een JSON-bestand products.json.
+Om het project lokaal op te zetten, volg deze stappen:
 
-Clone deze repository naar uw lokale machine.
-Open een terminal en navigeer naar de hoofdmap van het project.
+1. Kloon de repository naar je lokale machine.
+2. Open de terminal en navigeer naar de projectmap.
+3. Voer `npm install` uit om alle nodige packages te installeren.
+4. Start de server met `npm start`.
 
-Installeer met het volgende commando: npm install
+De webshop zal beschikbaar zijn op `http://localhost:3000`.
 
-Uitvoeren van de server
-Om de server te starten en uw webshop beschikbaar te maken, voert u het volgende commando uit in de terminal: node js/server.js
+## Inloggen
+
+Om toegang te krijgen tot de beheerderspagina, gebruik het standaardwachtwoord `0000`.
 
 Het project is online beschikbaar op: <https://dancing-sopapillas-56809a.netlify.app/index.html>
 
