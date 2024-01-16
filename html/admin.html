@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/styles.css">
+  <title>Beheerderspagina</title>
+</head>
+<body>
+  <header>
+    <h1>Beheerderspagina</h1>
+    <button id="load-products">Laden producten uit JSON</button>
+    <button id="go-to-admin">Terug naar beheerderspagina</button>
+    <button id="go-to-orders">Orders</button>
+  </header>
+
+  <main>
+    <table id="ordersTable">
+      <tbody id="admin-product-container">
+      </tbody>
+    </table>
+
+    <div>
+      <h2>Voeg nieuw product toe</h2>
+      <form id="add-product-form">
+        <label for="product-name">Naam:</label>
+        <input type="text" id="product-name" required>
+        <label for="product-description">Beschrijving:</label>
+        <input type="text" id="product-description">
+        <label for="product-price">Prijs:</label>
+        <input type="number" id="product-price" step="0.01" required>
+        <label for="product-image">Afbeelding URL:</label>
+        <input type="text" id="product-image" required>
+        <button type="submit">Voeg product toe</button>
+      </form>
+    </div>
+  </main>
+
+  <footer>
+    <button id="go-to-home">Terug naar hoofdpagina</button>
+  </footer>
+
+  <script src="../js/admin.js"></script>
+</body>
+</html>
+

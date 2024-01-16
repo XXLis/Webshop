@@ -1,0 +1,24 @@
+{
+  "name": "build-your-own-webshop-25e7168d-f5d7085e",
+  "version": "1.0.0",
+  "description": "Functionaliteiten",
+  "main": "index.js",
+  "scripts": {
+    "start": "node js/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@git.nexed.com:018b22d2-6f85-7e15-a164-ac40f7a68e6d/5603296f-3687-451a-b37a-dcba40315e03/Build-your-own-webshop-25e7168d-f5d7085e.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  }
+}

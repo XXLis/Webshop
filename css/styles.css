@@ -1,0 +1,177 @@
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: #b8bbb5;
+  color: #fff;
+}
+
+h1 {
+  margin: 0;
+}
+button {
+  margin: 10px;
+  padding: 10px 20px;
+  background-color: #3a99cf;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #2964bd;
+}
+
+
+#cart-button {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #fff;
+}
+
+#cart-button img {
+  width: 30px;
+  height: 30px;
+  margin-right: 5px;
+}
+
+#cart-item-count {
+  font-weight: bold;
+}
+
+.product-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+  max-width: 100%;
+  border: 1px solid #ccc;
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+
+.product-item img {
+  width: 100%;
+  max-height: 200px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+
+.product-title {
+  margin: 0;
+  text-align: center;
+}
+
+.product-price {
+  margin: 0;
+  font-weight: bold;
+}
+
+#cart-items-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 500px;
+  height: 30px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+  background-color: #fff;
+}
+
+.cart-item img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  margin-right: 5px;
+}
+
+#total-price {
+  margin: 20px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.product-item:hover img {
+  transform: scale(1.1);
+}
+
+/* Bestellingen */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background-color: #333;
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+}
+
+header h1 {
+  margin: 0;
+}
+
+button {
+  margin: 10px;
+  padding: 10px 20px;
+  background-color: #28a767;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+button:hover {
+  background-color: #1f844a;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  background-color: #fff;
+}
+
+table th {
+  background-color: #333;
+  color: #fff;
+  padding: 10px;
+  text-align: left;
+}
+
+table td {
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+table tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+footer {
+  background-color: #333;
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+}

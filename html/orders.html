@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/styles.css">
+    <title>Bestellingen</title>
+</head>
+<body>
+    <header>
+        <h1>Bestellingen</h1>
+        <button onclick="goBack()">Terug</button>
+    </header>
+
+    <main>
+        <table id="ordersTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Product</th>
+                    <th>Aantal</th>
+                    <th>Totaal</th>
+                </tr>
+            </thead>
+            <tbody id="admin-product-container">
+                <!-- Orders -->
+            </tbody>
+        </table>
+    </main>
+
+    <footer>
+
+    </footer>
+    <script src="../js/orders.js"></script>
+
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+</html>
