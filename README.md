@@ -32,27 +32,29 @@ Dit project maakt gebruik van de volgende technologieën:
 
 De projectstructuur ziet er als volgt uit:
 
-webshop/
-├── css/
-│ └── styles.css
-├── html/
-│ ├── index.html
-│ ├── admin.html
-│ ├── cart.html
-│ └── orders.html
-├── js/
-│ ├── admin.js
-│ ├── cart.js
-│ ├── orders.js
-│ ├── Products.js
-│ ├── script.js
-│ └── server.js
-├── data/
-│ ├── products.json
-│ └── orders.json
-├── README.md
-├── foto/
-└── icon/
+- webshop/
+  - css/
+    - styles.css
+  - html/
+    - index.html
+    - admin.html
+    - cart.html
+    - orders.html
+  - js/
+    - admin.js
+    - cart.js
+    - orders.js
+    - Products.js
+    - script.js
+    - server.js
+  - data/
+    - products.json
+    - orders.json
+  - README.md
+  - foto/
+  - icon/
+  - package.json
+  - package-lock.json
 
 - De `css/` map bevat de opmaakbestanden.
 - De `html/` map bevat HTML-bestanden voor de hoofdpagina, beheerderspagina, winkelwagenpagina en bestellingenpagina.
