@@ -49,57 +49,10 @@
     "image": "pig.jpg"
   },
   {
-    "name": "Test",
-    "description": "ff",
-    "price": 4444,
-    "image": "pig.jpg"
-  },
-  {
-    "id": null,
-    "name": "Pig",
-    "description": "ff",
-    "price": 2,
-    "image": "pig.jpg"
-  },
-  {
-    "id": null,
+    "id": 16,
     "name": "Pig",
     "description": "test2",
-    "price": 3,
-    "image": "pig.jpg"
-  },
-  {
-    "id": null,
-    "name": "Test",
-    "description": "ff",
-    "price": 6,
-    "image": "pig.jpg"
-  },
-  {
-    "id": null,
-    "name": "Test",
-    "description": "1",
-    "price": 1,
-    "image": "pig.jpg"
-  },
-  {
-    "name": "Test",
-    "description": "ff",
-    "price": 5,
-    "image": "pig.jpg"
-  },
-  {
-    "id": 16,
-    "name": "Test",
-    "description": "1",
-    "price": 4,
-    "image": "pig.jpg"
-  },
-  {
-    "id": 17,
-    "name": "Test",
-    "description": "ff",
-    "price": 111,
+    "price": 400,
     "image": "pig.jpg"
   }
 ]
