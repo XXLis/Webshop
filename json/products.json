@@ -42,17 +42,15 @@
     "image": "bot.jpeg"
   },
   {
-    "id": 15,
     "name": "Pig",
-    "description": "test",
-    "price": 444,
+    "description": "test2",
+    "price": 5,
     "image": "pig.jpg"
   },
   {
-    "id": 16,
     "name": "Pig",
     "description": "test2",
-    "price": 400,
+    "price": 600,
     "image": "pig.jpg"
   }
 ]
