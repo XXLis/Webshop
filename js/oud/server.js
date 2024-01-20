@@ -4,19 +4,18 @@ const fs = require('fs');
 const cors = require('cors');
 const path = require('path');
 
-// Initialize express app
 const app = express();
 const port = 3000;
 
-// Middlewares for JSON parsing and CORS
+// Middleware to parse JSON bodies and enable CORS
 app.use(bodyParser.json());
 app.use(cors());
 
-// Paths to product and order JSON files
+// Paths to the products and orders JSON files
 const productsPath = path.join(__dirname, '..', 'json', 'products.json');
 const ordersPath = path.join(__dirname, '..', 'json', 'orders.json');
 
-// Endpoint to get all products
+// GET endpoint to fetch all products
 app.get('/api/products', (req, res) => {
     try {
         const products = JSON.parse(fs.readFileSync(productsPath, 'utf8'));
@@ -27,21 +26,26 @@ app.get('/api/products', (req, res) => {
     }
 });
 
-// Endpoint to add a new product
+// POST endpoint to add a new product
 app.post('/api/products', (req, res) => {
     try {
         const newProduct = req.body;
-        const products = JSON.parse(fs.readFileSync(productsPath, 'utf8'));
+        let products = JSON.parse(fs.readFileSync(productsPath, 'utf8'));
+
+        // Generate a new ID for the product
+        const nextId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
+        newProduct.id = nextId;
+
         products.push(newProduct);
         fs.writeFileSync(productsPath, JSON.stringify(products, null, 2));
-        res.status(201).json(newProduct);
+        res.status(201).json(products); // Return the updated list of products
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'An error occurred while adding the product.' });
     }
 });
 
-// Endpoint to add a new order
+// POST endpoint to add a new order
 app.post('/api/orders', (req, res) => {
     console.log('Received new order:', req.body);
     try {
@@ -62,7 +66,7 @@ app.post('/api/orders', (req, res) => {
     }
 });
 
-// Endpoint to delete a product by ID
+// DELETE endpoint to remove a product by ID
 app.delete('/api/products/:id', (req, res) => {
     try {
         const productId = parseInt(req.params.id);
@@ -76,7 +80,7 @@ app.delete('/api/products/:id', (req, res) => {
     }
 });
 
-// Endpoint to get all orders
+// GET endpoint to fetch all orders
 app.get('/api/orders', (req, res) => {
     try {
         if (!fs.existsSync(ordersPath)) {
@@ -91,7 +95,7 @@ app.get('/api/orders', (req, res) => {
     }
 });
 
-// Start the server
+// Start the server on the specified port
 app.listen(port, () => {
     console.log(`Server started on port ${port}`);
 });
