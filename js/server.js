@@ -4,15 +4,19 @@ const fs = require('fs');
 const cors = require('cors');
 const path = require('path');
 
+// Initializing the express application
 const app = express();
 const port = 3000;
 
+// Applying middleware for parsing JSON and enabling CORS
 app.use(bodyParser.json());
 app.use(cors());
 
+// Paths to the products and orders JSON files
 const productsPath = path.join(__dirname, '..', 'json', 'products.json');
 const ordersPath = path.join(__dirname, '..', 'json', 'orders.json');
 
+// Function to generate the next product ID based on the highest ID present in the list
 function getNextProductId(products) {
     if (products.length === 0) {
         return 1;
@@ -20,19 +24,24 @@ function getNextProductId(products) {
     return Math.max(...products.map(p => p.id)) + 1;
 }
 
+// GET endpoint to fetch all products
 app.get('/api/products', (req, res) => {
-    const products = JSON.parse(fs.readFileSync(productsPath, 'utf8'));
-    res.status(200).json(products);
+    try {
+        const products = JSON.parse(fs.readFileSync(productsPath, 'utf8'));
+        res.status(200).json(products);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'An error occurred while fetching products.' });
+    }
 });
 
+// POST endpoint to add a new product
 app.post('/api/products', (req, res) => {
     try {
         let products = JSON.parse(fs.readFileSync(productsPath, 'utf8'));
-
-        // Obliczenie następnego ID
         const nextId = getNextProductId(products);
 
-        // Tworzenie nowego produktu z 'id' jako pierwszym polem
+        // Creating new product object with 'id' as the first property
         const newProduct = {
             id: nextId,
             name: req.body.name,
@@ -50,22 +59,17 @@ app.post('/api/products', (req, res) => {
     }
 });
 
-
-// POST endpoint to add a new product
-app.post('/api/products', (req, res) => {
+// DELETE endpoint to remove a product by its ID
+app.delete('/api/products/:id', (req, res) => {
     try {
-        const newProduct = req.body;
         let products = JSON.parse(fs.readFileSync(productsPath, 'utf8'));
+        products = products.filter(product => product.id !== parseInt(req.params.id));
 
-        // Assign a new unique ID to the new product
-        newProduct.id = getNextProductId(products);
-        
-        products.push(newProduct);
         fs.writeFileSync(productsPath, JSON.stringify(products, null, 2));
-        res.status(201).json(newProduct);
+        res.status(200).json({ message: 'Product removed' });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'An error occurred while adding the product.' });
+        res.status(500).json({ error: 'An error occurred while removing the product.' });
     }
 });
 
@@ -88,20 +92,6 @@ app.post('/api/orders', (req, res) => {
     }
 });
 
-// DELETE endpoint to remove a product by ID
-app.delete('/api/products/:id', (req, res) => {
-    try {
-        const productId = parseInt(req.params.id);
-        let products = JSON.parse(fs.readFileSync(productsPath, 'utf8'));
-        products = products.filter(product => product.id !== productId);
-        fs.writeFileSync(productsPath, JSON.stringify(products, null, 2));
-        res.status(200).json({ message: 'Product removed' });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'An error occurred while removing the product.' });
-    }
-});
-
 // GET endpoint to fetch all orders
 app.get('/api/orders', (req, res) => {
     try {
@@ -117,7 +107,7 @@ app.get('/api/orders', (req, res) => {
     }
 });
 
-// Start the server
+// Starting the server on the specified port
 app.listen(port, () => {
     console.log(`Server started on port ${port}`);
 });

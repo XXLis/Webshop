@@ -33,5 +33,12 @@
     "description": "Rubber bot",
     "price": 6,
     "image": "bot.jpeg"
+  },
+  {
+    "name": "Pig",
+    "description": "test",
+    "price": 200,
+    "image": "pig.jpg",
+    "id": 14
   }
 ]
