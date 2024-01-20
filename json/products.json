@@ -47,56 +47,5 @@
     "description": "test",
     "price": 444,
     "image": "pig.jpg"
-  },
-  {
-    "name": "Pig",
-    "description": "test3",
-    "price": 99,
-    "image": "pig.jpg"
-  },
-  {
-    "name": "test",
-    "description": "r",
-    "price": 8,
-    "image": "pig.jpg"
-  },
-  {
-    "name": "Pig",
-    "description": "test3",
-    "price": 2222,
-    "image": "pig.jpg"
-  },
-  {
-    "id": 16,
-    "name": "Test",
-    "description": "test3",
-    "price": 5,
-    "image": "pig.jpg"
-  },
-  {
-    "id": 17,
-    "name": "Test",
-    "description": "test",
-    "price": 44,
-    "image": "pig.jpg"
-  },
-  {
-    "id": 18,
-    "name": "Test",
-    "description": "test",
-    "price": 44,
-    "image": "pig.jpg"
-  },
-  {
-    "id": null,
-    "name": "Test",
-    "price": 122,
-    "image": "pig.jpg"
-  },
-  {
-    "id": null,
-    "name": "Pig",
-    "price": 500,
-    "image": "pig.jpg"
   }
 ]
