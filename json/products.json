@@ -74,5 +74,12 @@
     "description": "ff",
     "price": 6,
     "image": "pig.jpg"
+  },
+  {
+    "id": null,
+    "name": "Test",
+    "description": "1",
+    "price": 1,
+    "image": "pig.jpg"
   }
 ]
