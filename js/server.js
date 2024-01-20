@@ -28,9 +28,11 @@ app.get('/api/products', (req, res) => {
 app.post('/api/products', (req, res) => {
     try {
         let products = JSON.parse(fs.readFileSync(productsPath, 'utf8'));
+
+        // Obliczenie następnego ID
         const nextId = getNextProductId(products);
 
-        // Tworzenie nowego produktu z id na pierwszym miejscu
+        // Tworzenie nowego produktu z 'id' jako pierwszym polem
         const newProduct = {
             id: nextId,
             name: req.body.name,
@@ -48,24 +50,6 @@ app.post('/api/products', (req, res) => {
     }
 });
 
-
-app.delete('/api/products/:id', (req, res) => {
-    let products = JSON.parse(fs.readFileSync(productsPath, 'utf8'));
-    products = products.filter(product => product.id !== parseInt(req.params.id));
-
-    fs.writeFileSync(productsPath, JSON.stringify(products, null, 2));
-    res.status(200).json({ message: 'Product removed' });
-});
-// GET endpoint to fetch all products
-app.get('/api/products', (req, res) => {
-    try {
-        const products = JSON.parse(fs.readFileSync(productsPath, 'utf8'));
-        res.status(200).json(products);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'An error occurred while fetching products.' });
-    }
-});
 
 // POST endpoint to add a new product
 app.post('/api/products', (req, res) => {
