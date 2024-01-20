@@ -53,7 +53,7 @@ function createProductRow(product) {
     const deleteButton = document.createElement('button');
     deleteButton.textContent = 'Delete';
     deleteButton.onclick = async () => {
-        if (confirm('Are you sure you want to delete this product?')) {
+        if (confirm('Weet u zeker dat u het product wilt verwijderen?')) {
             await deleteProduct(product.id);
             row.remove();
         }
