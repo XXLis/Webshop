@@ -27,14 +27,20 @@ app.post('/api/products', (req, res) => {
     try {
         const newProduct = req.body;
         const products = JSON.parse(fs.readFileSync(productsPath, 'utf8'));
-        products.push(newProduct);
-        fs.writeFileSync(productsPath, JSON.stringify(products, null, 2));
-        res.status(201).json(newProduct);
+
+        // Find the next ID
+        const nextId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
+        newProduct.id = nextId; // Assign the next ID to the new product
+
+        products.push(newProduct); // Add the new product to the array
+        fs.writeFileSync(productsPath, JSON.stringify(products, null, 2)); // Write the updated products array to products.json
+        res.status(201).json(newProduct); // Respond with the newly added product
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Er is een fout opgetreden bij het toevoegen van het product.' });
     }
 });
+
 
 app.post('/api/orders', (req, res) => {
     console.log('Received new order:', req.body);
