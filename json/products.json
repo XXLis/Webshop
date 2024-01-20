@@ -47,17 +47,5 @@
     "description": "test",
     "price": 444,
     "image": "pig.jpg"
-  },
-  {
-    "name": "Test",
-    "description": "test",
-    "price": 333,
-    "image": "pig.jpg"
-  },
-  {
-    "name": "Pig",
-    "description": "test2",
-    "price": 2,
-    "image": "pig.jpg"
   }
 ]

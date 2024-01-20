@@ -1,4 +1,10 @@
-// Asynchronously fetch products from the server
+// Function to generate a unique product ID based on existing products
+function generateUniqueProductId(products) {
+    if (!products.length) return 1;
+    return Math.max(...products.map(p => p.id)) + 1;
+}
+
+// Asynchronously fetch products from the server or local file
 async function fetchProducts() {
     try {
         const response = await fetch('http://localhost:3000/api/products');
@@ -86,7 +92,9 @@ async function handleAddProduct(event) {
         return;
     }
 
+    const products = await fetchProducts(); // Fetch existing products to generate a new ID
     const newProduct = {
+        id: generateUniqueProductId(products),
         name: productName,
         description: productDescription,
         price: productPrice,
