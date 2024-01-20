@@ -65,5 +65,12 @@
     "description": "test3",
     "price": 2222,
     "image": "pig.jpg"
+  },
+  {
+    "id": 16,
+    "name": "Test",
+    "description": "test3",
+    "price": 5,
+    "image": "pig.jpg"
   }
 ]

@@ -137,11 +137,12 @@ async function handleProductFormSubmit(e) {
         }
         const addedProduct = await response.json();
         console.log('Added product:', addedProduct);
-        alert('Product added successfully');
         displayAdminProducts(); // Refresh the product list
     } catch (error) {
         console.error('Error adding the product:', error);
         alert('An error occurred while adding the product.');
+    } finally {
+        e.target.reset(); // Reset form fields
     }
 }
 
