@@ -12,6 +12,9 @@ async function addProduct() {
         alert('Product name is required');
         return;
     }
+    if (response.ok) {
+        loadProducts(); // Ponowne załadowanie produktów po pomyślnym dodaniu
+    }
 
     // Validate product price input
     if (Number.isNaN(productPrice) || productPrice <= 0) {

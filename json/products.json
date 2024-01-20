@@ -1,3 +1,23 @@
 [
-
+  {
+    "name": "Pig",
+    "description": "pig",
+    "price": 10,
+    "image": "pig.jpg",
+    "id": 1
+  },
+  {
+    "name": "Kip",
+    "description": "kip",
+    "price": 8,
+    "image": "kip.jpg",
+    "id": 2
+  },
+  {
+    "name": "Duck",
+    "description": "duck",
+    "price": 7,
+    "image": "duck.jpg",
+    "id": 3
+  }
 ]
