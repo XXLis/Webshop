@@ -47,5 +47,12 @@
     "price": 101,
     "image": "pig.jpg",
     "id": 15
+  },
+  {
+    "name": "Pig",
+    "description": "test",
+    "price": 102,
+    "image": "pig.jpg",
+    "id": 16
   }
 ]

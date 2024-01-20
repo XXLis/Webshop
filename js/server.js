@@ -41,14 +41,14 @@ app.post('/api/products', (req, res) => {
         let products = JSON.parse(fs.readFileSync(productsPath, 'utf8'));
         const nextId = getNextProductId(products);
 
-        // Najpierw tworzymy obiekt z samym id
-        const newProduct = { id: nextId };
-
-        // Następnie dodajemy pozostałe pola do obiektu
-        newProduct.name = req.body.name;
-        newProduct.description = req.body.description;
-        newProduct.price = req.body.price;
-        newProduct.image = req.body.image;
+        // Creating new product object with 'id' as the first property
+        const newProduct = {
+            id: nextId,
+            name: req.body.name,
+            description: req.body.description,
+            price: req.body.price,
+            image: req.body.image
+        };
 
         products.push(newProduct);
         fs.writeFileSync(productsPath, JSON.stringify(products, null, 2));
@@ -58,7 +58,6 @@ app.post('/api/products', (req, res) => {
         res.status(500).json({ error: 'An error occurred while adding the product.' });
     }
 });
-
 
 // DELETE endpoint to remove a product by its ID
 app.delete('/api/products/:id', (req, res) => {
