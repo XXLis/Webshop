@@ -26,15 +26,28 @@ app.get('/api/products', (req, res) => {
 });
 
 app.post('/api/products', (req, res) => {
-    const newProduct = req.body;
-    let products = JSON.parse(fs.readFileSync(productsPath, 'utf8'));
+    try {
+        let products = JSON.parse(fs.readFileSync(productsPath, 'utf8'));
+        const nextId = getNextProductId(products);
 
-    newProduct.id = getNextProductId(products);
-    products.push(newProduct);
+        // Tworzenie nowego produktu z id na pierwszym miejscu
+        const newProduct = {
+            id: nextId,
+            name: req.body.name,
+            description: req.body.description,
+            price: req.body.price,
+            image: req.body.image
+        };
 
-    fs.writeFileSync(productsPath, JSON.stringify(products, null, 2));
-    res.status(201).json(newProduct);
+        products.push(newProduct);
+        fs.writeFileSync(productsPath, JSON.stringify(products, null, 2));
+        res.status(201).json(newProduct);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'An error occurred while adding the product.' });
+    }
 });
+
 
 app.delete('/api/products/:id', (req, res) => {
     let products = JSON.parse(fs.readFileSync(productsPath, 'utf8'));
