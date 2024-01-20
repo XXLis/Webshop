@@ -16,6 +16,15 @@ app.use(cors());
 const productsPath = path.join(__dirname, '..', 'json', 'products.json');
 const ordersPath = path.join(__dirname, '..', 'json', 'orders.json');
 
+// Function to generate a new unique product ID
+function getNextProductId(products) {
+    if (products.length === 0) {
+        return 1;
+    }
+    const maxId = Math.max(...products.map(product => product.id));
+    return maxId + 1;
+}
+
 // GET endpoint to fetch all products
 app.get('/api/products', (req, res) => {
     try {
@@ -33,10 +42,9 @@ app.post('/api/products', (req, res) => {
         const newProduct = req.body;
         let products = JSON.parse(fs.readFileSync(productsPath, 'utf8'));
 
-        // Generate a new ID for the product
-        const nextId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
-        newProduct.id = nextId;
-
+        // Assign a new unique ID to the new product
+        newProduct.id = getNextProductId(products);
+        
         products.push(newProduct);
         fs.writeFileSync(productsPath, JSON.stringify(products, null, 2));
         res.status(201).json(newProduct);
@@ -48,7 +56,6 @@ app.post('/api/products', (req, res) => {
 
 // POST endpoint to add a new order
 app.post('/api/orders', (req, res) => {
-    console.log('Received new order:', req.body);
     try {
         const newOrder = req.body;
         let orders = [];
@@ -59,7 +66,6 @@ app.post('/api/orders', (req, res) => {
 
         orders.push(newOrder);
         fs.writeFileSync(ordersPath, JSON.stringify(orders, null, 2));
-        console.log('Order added successfully:', newOrder);
         res.status(201).json(newOrder);
     } catch (error) {
         console.error(error);
