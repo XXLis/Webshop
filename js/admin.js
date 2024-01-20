@@ -1,4 +1,4 @@
-
+// Asynchronously fetch products from the server
 async function fetchProducts() {
     try {
         const response = await fetch('http://localhost:3000/api/products');
@@ -14,6 +14,7 @@ async function fetchProducts() {
     }
 }
 
+// Asynchronously delete a product by its ID
 async function deleteProduct(productId) {
     try {
         const response = await fetch(`http://localhost:3000/api/products/${productId}`, {
@@ -29,6 +30,7 @@ async function deleteProduct(productId) {
     }
 }
 
+// Create the header row of a table
 function createTableHeader(headers) {
     const headerRow = document.createElement('tr');
     headers.forEach(headerText => {
@@ -39,10 +41,12 @@ function createTableHeader(headers) {
     return headerRow;
 }
 
+// Redirect to the home page
 function goToHomePage() {
     window.location.href = '../html/index.html';
 }
 
+// Create a row in the product table for each product
 function createProductRow(product) {
     const row = document.createElement('tr');
     row.insertCell().textContent = product.id;
@@ -51,7 +55,6 @@ function createProductRow(product) {
     row.insertCell().textContent = product.image;
 
     const actionsCell = row.insertCell();
-
     const deleteButton = document.createElement('button');
     deleteButton.textContent = 'Delete';
     deleteButton.addEventListener('click', () => handleRemoveProduct(product.id));
@@ -60,12 +63,12 @@ function createProductRow(product) {
     return row;
 }
 
+// Display all products in the admin panel
 async function displayAdminProducts() {
     const adminProductContainer = document.getElementById('admin-product-container');
     adminProductContainer.innerHTML = '';
 
     const products = await fetchProducts();
-
     if (!products || products.length === 0) {
         const noProductsMessage = document.createElement('p');
         noProductsMessage.textContent = 'No products available.';
@@ -75,7 +78,6 @@ async function displayAdminProducts() {
 
     const table = document.createElement('table');
     table.classList.add('admin-product-table');
-
     const headers = ['ID', 'Name', 'Price', 'Image URL', 'Actions'];
     table.appendChild(createTableHeader(headers));
 
@@ -86,6 +88,7 @@ async function displayAdminProducts() {
     adminProductContainer.appendChild(table);
 }
 
+// Handle the removal of a product and refresh the list
 async function handleRemoveProduct(productId) {
     const result = await deleteProduct(productId);
     if (result) {
@@ -94,31 +97,36 @@ async function handleRemoveProduct(productId) {
     }
 }
 
+// Event listener for page load to display products
 window.onload = displayAdminProducts;
+
+// Event listener for the DOMContentLoaded event
 document.addEventListener('DOMContentLoaded', () => {
+    // Handle the submission of the product addition form
     const addProductForm = document.getElementById('add-product-form');
     addProductForm.addEventListener('submit', async (e) => {
         e.preventDefault(); // Prevents the default form behavior (page reload)
 
-        // Get data from the form
+        // Retrieve data from the form
         const productName = document.getElementById('product-name').value;
         const productDescription = document.getElementById('product-description').value;
         const productPrice = parseFloat(document.getElementById('product-price').value);
         const productImage = document.getElementById('product-image').value;
 
+        // Validate the product name
         if (!productName) {
             alert('Product name is required');
             return;
         }
 
+        // Validate the product price
         if (Number.isNaN(productPrice) || productPrice <= 0) {
             alert('Invalid price. Please enter a valid price.');
             return;
         }
 
-        // Generate a new unique product ID
+        // Create a new product object
         const newProduct = {
-            id: generateUniqueProductId(),
             name: productName,
             description: productDescription,
             price: productPrice,
@@ -126,29 +134,27 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         try {
-            // Call the function to add the product
-            await addProduct(newProduct);
-            alert('Product added successfully');
+            // Add the product and refresh the list
+            const addedProduct = await addProduct(newProduct);
+            if (addedProduct) {
+                alert('Product added successfully');
+                // Use setTimeout to allow the alert box to close before refreshing the list
+                setTimeout(() => {
+                    displayAdminProducts();
+                }, 0);
+            }
         } catch (error) {
             console.error('Error adding the product:', error);
             alert('An error occurred while adding the product.');
+        } finally {
+            // Reset form fields here if you want them to clear regardless of success or failure
+            addProductForm.reset();
         }
     });
 
-    // Function to add a product
+    // Function to add a product to the server
     async function addProduct(productData) {
         try {
-            const products = await fetchProducts();
-            let maxId = 0;
-            // Find the maximum existing ID
-            products.forEach(product => {
-                if (product.id > maxId) {
-                    maxId = product.id;
-                }
-            });
-            // Increment the maximum ID to get the next available ID
-            const nextId = maxId + 1;
-            productData.id = nextId;
             const response = await fetch('http://localhost:3000/api/products', {
                 method: 'POST',
                 headers: {
@@ -165,23 +171,4 @@ document.addEventListener('DOMContentLoaded', () => {
             return null;
         }
     }
-    // Function to generate a unique product ID (customize as needed)
-    function generateUniqueProductId() {
-        return Date.now();
-    }
 });
-document.addEventListener('DOMContentLoaded', () => {
-    const addProductForm = document.getElementById('add-product-form');
-
-    // "Orders"
-    const goToOrdersButton = document.getElementById('go-to-orders');
-    goToOrdersButton.addEventListener('click', () => {
-        window.location.href = '/html/orders.html';
-    });
-    // "Terug naar hoofdpagina"
-    const goToHomePageButton = document.getElementById('go-to-home');
-    goToHomePageButton.addEventListener('click', () => {
-        window.location.href = '/html/index.html';
-    });
-});
-
