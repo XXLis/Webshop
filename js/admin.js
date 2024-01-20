@@ -100,32 +100,36 @@ async function handleRemoveProduct(productId) {
 // Event listener for page load to display products
 window.onload = displayAdminProducts;
 
-// Event listener for the DOMContentLoaded event
+// Using event delegation for dynamically added content
+document.addEventListener('click', function(event) {
+    if (event.target.matches('#go-to-orders')) {
+        window.location.href = '/html/orders.html';
+    } else if (event.target.matches('#go-to-home')) {
+        goToHomePage();
+    }
+});
+
+// Handle the submission of the product addition form
 document.addEventListener('DOMContentLoaded', () => {
-    // Handle the submission of the product addition form
     const addProductForm = document.getElementById('add-product-form');
     addProductForm.addEventListener('submit', async (e) => {
-        e.preventDefault(); // Prevents the default form behavior (page reload)
+        e.preventDefault();
 
-        // Retrieve data from the form
         const productName = document.getElementById('product-name').value;
         const productDescription = document.getElementById('product-description').value;
         const productPrice = parseFloat(document.getElementById('product-price').value);
         const productImage = document.getElementById('product-image').value;
 
-        // Validate the product name
         if (!productName) {
             alert('Product name is required');
             return;
         }
 
-        // Validate the product price
         if (Number.isNaN(productPrice) || productPrice <= 0) {
             alert('Invalid price. Please enter a valid price.');
             return;
         }
 
-        // Create a new product object
         const newProduct = {
             name: productName,
             description: productDescription,
@@ -134,11 +138,9 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         try {
-            // Add the product and refresh the list
             const addedProduct = await addProduct(newProduct);
             if (addedProduct) {
                 alert('Product added successfully');
-                // Use setTimeout to allow the alert box to close before refreshing the list
                 setTimeout(() => {
                     displayAdminProducts();
                 }, 0);
@@ -147,12 +149,10 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error adding the product:', error);
             alert('An error occurred while adding the product.');
         } finally {
-            // Reset form fields here if you want them to clear regardless of success or failure
             addProductForm.reset();
         }
     });
 
-    // Function to add a product to the server
     async function addProduct(productData) {
         try {
             const response = await fetch('http://localhost:3000/api/products', {
@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return await response.json();
         } catch (error) {
             console.error('Error:', error);
-            return null;
+            throw error; // Rethrow the error to be caught in the calling function
         }
     }
 });
