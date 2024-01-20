@@ -4,14 +4,15 @@ const fs = require('fs');
 const cors = require('cors');
 const path = require('path');
 
+// Initialize express app
 const app = express();
 const port = 3000;
 
-// Middleware to parse JSON bodies and enable CORS
+// Middlewares for JSON parsing and CORS
 app.use(bodyParser.json());
 app.use(cors());
 
-// Paths to the products and orders JSON files
+// Paths to product and order JSON files
 const productsPath = path.join(__dirname, '..', 'json', 'products.json');
 const ordersPath = path.join(__dirname, '..', 'json', 'orders.json');
 
@@ -38,7 +39,7 @@ app.post('/api/products', (req, res) => {
 
         products.push(newProduct);
         fs.writeFileSync(productsPath, JSON.stringify(products, null, 2));
-        res.status(201).json(products); // Return the updated list of products
+        res.status(201).json(newProduct);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'An error occurred while adding the product.' });
@@ -95,7 +96,7 @@ app.get('/api/orders', (req, res) => {
     }
 });
 
-// Start the server on the specified port
+// Start the server
 app.listen(port, () => {
     console.log(`Server started on port ${port}`);
 });
