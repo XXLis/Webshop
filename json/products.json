@@ -61,26 +61,5 @@
     "description": "test",
     "price": 3,
     "image": "pig.jpg"
-  },
-  {
-    "id": 18,
-    "name": "Rugbybal",
-    "description": "Rubber bot",
-    "price": 44,
-    "image": "duck.jpg"
-  },
-  {
-    "id": 19,
-    "name": "Test",
-    "description": "test",
-    "price": 3,
-    "image": "pig.jpg"
-  },
-  {
-    "id": 20,
-    "name": "Eend",
-    "description": "d",
-    "price": 22,
-    "image": "duck.jpg"
   }
 ]
