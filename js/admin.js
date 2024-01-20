@@ -1,7 +1,7 @@
 // Function to generate a unique product ID based on existing products
 function generateUniqueProductId(products) {
     if (!products.length) return 1;
-    return Math.max(...products.map(p => p.id)) + 1;
+    return Math.max(0, ...products.map(p => p.id)) + 1;
 }
 
 // Asynchronously fetch products from the server
@@ -85,7 +85,7 @@ async function displayAdminProducts() {
     const tbody = table.createTBody();
     const tableHeaders = ['ID', 'Name', 'Price', 'Image URL', 'Actions'];
 
-    table.appendChild(createTableHeader(tableHeaders));
+    adminProductContainer.appendChild(createTableHeader(tableHeaders));
     products.forEach(product => createProductRow(product, tbody));
     adminProductContainer.appendChild(table);
 }
@@ -95,6 +95,7 @@ async function handleAddProduct(event) {
     event.preventDefault();
 
     const productName = event.target.elements['product-name'].value;
+    const productDescription = event.target.elements['product-description'].value;
     const productPrice = parseFloat(event.target.elements['product-price'].value);
     const productImage = event.target.elements['product-image'].value;
 
@@ -109,6 +110,7 @@ async function handleAddProduct(event) {
     const newProduct = {
         id: generateUniqueProductId(products),
         name: productName,
+        description: productDescription,
         price: productPrice,
         image: productImage,
     };
@@ -136,14 +138,29 @@ async function handleAddProduct(event) {
     }
 }
 
-// Function to initialize the admin page
-function initializeAdminPage() {
+// Add event listeners after the DOM content is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    // Display products when the page is fully loaded
     displayAdminProducts();
 
-    // Event listener for adding a product
+    // Event listener for the product addition form
     const addProductForm = document.getElementById('add-product-form');
     addProductForm.addEventListener('submit', handleAddProduct);
-}
 
-// Event listener for DOMContentLoaded to initialize the admin page
-document.addEventListener('DOMContentLoaded', initializeAdminPage);
+    // Event listeners for buttons
+    const loadProductsButton = document.getElementById('load-products');
+    loadProductsButton.addEventListener('click', displayAdminProducts);
+
+    const goToAdminButton = document.getElementById('go-to-admin');
+    goToAdminButton.addEventListener('click', () => {
+        window.location.reload();
+    });
+
+    const goToOrdersButton = document.getElementById('go-to-orders');
+    goToOrdersButton.addEventListener('click', () => {
+        window.location.href = '/html/orders.html'; // Update to the correct path
+    });
+
+    const goToHomeButton = document.getElementById('go-to-home');
+    goToHomeButton.addEventListener('click', goToHomePage);
+});
