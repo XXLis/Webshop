@@ -1,148 +1,139 @@
-// Function to display products on the web page.
-function displayProducts(products) {
-    const productContainer = document.getElementById("product-container");
-    productContainer.innerHTML = "";
-
-    products.forEach((product) => {
-        // Create and configure the elements for each product
-        const productItem = document.createElement("div");
-        productItem.classList.add("product-item");
-
-        const productImage = document.createElement("img");
-        productImage.src = `../foto/${product.image}`;
-        productImage.alt = product.name;
-
-        const productTitle = document.createElement("h3");
-        productTitle.textContent = product.name;
-
-        const productDescription = document.createElement("p");
-        productDescription.textContent = product.description;
-
-        const productPrice = document.createElement("span");
-        productPrice.textContent = `€${product.price.toFixed(2)}`;
-
-        const addToCartButton = document.createElement("button");
-        addToCartButton.textContent = "In winkelwagen";
-        addToCartButton.addEventListener("click", () => addToCart(product));
-
-        // Append product details to the product item
-        productItem.appendChild(productImage);
-        productItem.appendChild(productTitle);
-        productItem.appendChild(productDescription);
-        productItem.appendChild(productPrice);
-        productItem.appendChild(addToCartButton);
-
-        // Append the product item to the product container
-        productContainer.appendChild(productItem);
-    });
-}
-
-// Function to add a product to the shopping cart.
-function addToCart(product) {
-    let cartItems = localStorage.getItem("cartItems");
-    cartItems = cartItems ? JSON.parse(cartItems) : [];
-
-    // Check if the product is already in the cart
-    const existingItem = cartItems.find((item) => item.id === product.id);
-    if (existingItem) {
-        existingItem.quantity += 1;
-    } else {
-        product.quantity = 1;
-        cartItems.push(product);
+// Function to asynchronously fetch products from the server
+async function fetchProducts() {
+    try {
+        const response = await fetch('http://localhost:3000/api/products');
+        if (!response.ok) {
+            throw new Error('Server responded with an error!');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching products:', error);
+        return [];
     }
-
-    localStorage.setItem("cartItems", JSON.stringify(cartItems));
-    updateCartItemCount();
 }
 
-// Function to update the cart item count.
-function updateCartItemCount() {
-    let cartItems = localStorage.getItem("cartItems");
-    cartItems = cartItems ? JSON.parse(cartItems) : [];
-
-    const totalCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-    const cartItemCount = document.getElementById("cart-item-count");
-    cartItemCount.textContent = totalCount.toString();
+// Function to asynchronously delete a product by its ID
+async function deleteProduct(productId) {
+    try {
+        const response = await fetch(`http://localhost:3000/api/products/${productId}`, {
+            method: 'DELETE',
+        });
+        if (!response.ok) {
+            throw new Error('Error deleting product');
+        }
+        console.log('Product deleted');
+        return await response.json();
+    } catch (error) {
+        console.error('Error deleting product:', error);
+    }
 }
 
-// Function to display cart items on the cart page.
-function displayCartItems() {
-    let cartItems = localStorage.getItem("cartItems");
-    cartItems = cartItems ? JSON.parse(cartItems) : [];
-    const cartItemsContainer = document.getElementById("cart-items-container");
-    cartItemsContainer.innerHTML = ""; // Clear the container
-
-    cartItems.forEach((cartItem) => {
-        // Create a new div element for each cart item
-        const cartItemElement = document.createElement("div");
-        cartItemElement.classList.add("cart-item");
-        
-        cartItemsContainer.appendChild(cartItemElement);
+// Function to create the header row of a table
+function createTableHeader() {
+    const headers = ['ID', 'Name', 'Price', 'Image URL', 'Actions'];
+    const headerRow = document.createElement('tr');
+    headers.forEach(headerText => {
+        const headerCell = document.createElement('th');
+        headerCell.textContent = headerText;
+        headerRow.appendChild(headerCell);
     });
+    return headerRow;
 }
 
+// Function to create a row in the product table for each product
+function createProductRow(product, tbody) {
+    const row = tbody.insertRow();
+    row.insertCell().textContent = product.id;
+    row.insertCell().textContent = product.name;
+    row.insertCell().textContent = `€${product.price.toFixed(2)}`;
+    row.insertCell().textContent = product.image;
 
-// Redirects to the home page.
-function goToHomePage() {
-    window.location.href = '/html/index.html';
-}
-
-// Function to load products when the window is loaded.
-window.onload = loadProducts;
-
-// Initializes the cart items display.
-displayCartItems();
-
-// Function to fetch products from a JSON file and display them.
-function loadProducts() {
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", "../json/products.json", true);
-    xhr.onload = function () {
-        if (xhr.status === 200) {
-            const products = JSON.parse(xhr.responseText);
-            displayProducts(products);
-            updateCartItemCount();
+    const deleteCell = row.insertCell();
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete';
+    deleteButton.onclick = async () => {
+        if (confirm('Are you sure you want to delete this product?')) {
+            await deleteProduct(product.id);
+            row.remove();
         }
     };
-    xhr.send();
+    deleteCell.appendChild(deleteButton);
 }
 
-// Event listener for DOMContentLoaded to handle login.
-document.addEventListener('DOMContentLoaded', function () {
-    checkLoginStatus();
+// Function to display all products in the admin panel
+async function displayAdminProducts() {
+    const products = await fetchProducts();
+    const adminProductContainer = document.getElementById('admin-product-container');
+    adminProductContainer.innerHTML = ''; // Clear the container
 
-    const loginForm = document.getElementById('loginForm');
-    if (loginForm) {
-        loginForm.addEventListener('submit', function (event) {
-            event.preventDefault();
+    adminProductContainer.appendChild(createTableHeader());
+    const tbody = document.createElement('tbody');
+    products.forEach(product => createProductRow(product, tbody));
+    adminProductContainer.appendChild(tbody);
+}
 
-            const password = document.getElementById('password').value;
-            const correctPassword = '0000';
+// Function to handle the form submission for adding a product
+async function handleAddProduct(event) {
+    event.preventDefault();
 
-            if (password === correctPassword) {
-                const now = new Date().getTime();
-                localStorage.setItem('loggedIn', true);
-                localStorage.setItem('loginTime', now);
-                window.location.href = '../html/admin.html';
-            } else {
-                alert('Incorrect password!');
-            }
+    const productName = document.getElementById('product-name').value;
+    const productDescription = document.getElementById('product-description').value;
+    const productPrice = parseFloat(document.getElementById('product-price').value);
+    const productImage = document.getElementById('product-image').value;
+
+    // Validate form inputs
+    if (!productName || Number.isNaN(productPrice) || productPrice <= 0) {
+        alert('Please fill out the name and provide a valid price for the product.');
+        return;
+    }
+
+    const newProduct = {
+        name: productName,
+        description: productDescription,
+        price: productPrice,
+        image: productImage,
+    };
+
+    try {
+        // Add the product
+        const response = await fetch('http://localhost:3000/api/products', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newProduct),
         });
-    }
-});
-
-// Function to check the login status.
-function checkLoginStatus() {
-    const isLoggedIn = localStorage.getItem('loggedIn');
-    const loginTime = localStorage.getItem('loginTime');
-
-    if (isLoggedIn) {
-        const now = new Date().getTime();
-        const timeLimit = 5 * 60 * 1000; // 5 minutes in milliseconds
-
-        if (now - loginTime > timeLimit) {
-            localStorage.removeItem('loggedIn');
-            localStorage.removeItem('loginTime');
+        if (!response.ok) {
+            throw new Error('Server responded with an error!');
         }
+        await response.json();
+        displayAdminProducts(); // Refresh the product list
+    } catch (error) {
+        console.error('Error adding the product:', error);
+        alert('An error occurred while adding the product.');
+    } finally {
+        event.target.reset(); // Clear the form fields
     }
 }
+
+// Function to add event listeners after the DOM content is loaded
+function initializeEventListeners() {
+    // Event listener for the product addition form
+    const addProductForm = document.getElementById('add-product-form');
+    addProductForm.addEventListener('submit', handleAddProduct);
+
+    // Event listeners for navigation buttons
+    document.getElementById('go-to-orders').addEventListener('click', () => {
+        window.location.href = '/html/orders.html'; // Update to the correct path
+    });
+
+    document.getElementById('go-to-home').addEventListener('click', () => {
+        window.location.href = '/html/index.html'; // Update to the correct path
+    });
+}
+
+// Initialize the admin page
+document.addEventListener('DOMContentLoaded', () => {
+    displayAdminProducts();
+    initializeEventListeners();
+});

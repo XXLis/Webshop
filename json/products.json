@@ -42,15 +42,45 @@
     "image": "bot.jpeg"
   },
   {
+    "id": 15,
     "name": "Pig",
     "description": "test2",
-    "price": 5,
+    "price": 550,
     "image": "pig.jpg"
   },
   {
+    "id": 16,
     "name": "Pig",
     "description": "test2",
-    "price": 600,
+    "price": 550,
     "image": "pig.jpg"
+  },
+  {
+    "id": 17,
+    "name": "Test",
+    "description": "test",
+    "price": 3,
+    "image": "pig.jpg"
+  },
+  {
+    "id": 18,
+    "name": "Rugbybal",
+    "description": "Rubber bot",
+    "price": 44,
+    "image": "duck.jpg"
+  },
+  {
+    "id": 19,
+    "name": "Test",
+    "description": "test",
+    "price": 3,
+    "image": "pig.jpg"
+  },
+  {
+    "id": 20,
+    "name": "Eend",
+    "description": "d",
+    "price": 22,
+    "image": "duck.jpg"
   }
 ]
