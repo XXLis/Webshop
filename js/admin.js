@@ -1,12 +1,7 @@
-// Function to generate a unique product ID based on the current timestamp
+// Function to generate a unique product ID based on existing products
 function generateUniqueProductId(products) {
-    let maxId = 0;
-    products.forEach(product => {
-        if (product.id > maxId) {
-            maxId = product.id;
-        }
-    });
-    return maxId + 1;
+    if (!products.length) return 1;
+    return Math.max(...products.map(p => p.id)) + 1;
 }
 
 // Asynchronously fetch products from the server
@@ -14,14 +9,11 @@ async function fetchProducts() {
     try {
         const response = await fetch('http://localhost:3000/api/products');
         if (!response.ok) {
-            throw new Error('Error fetching products');
+            throw new Error('Server responded with an error!');
         }
-        const products = await response.json();
-        console.log('Fetched products:', products);
-        return products;
+        return await response.json();
     } catch (error) {
         console.error('Error fetching products:', error);
-        return [];
     }
 }
 
@@ -34,12 +26,9 @@ async function deleteProduct(productId) {
         if (!response.ok) {
             throw new Error('Error deleting product');
         }
-        const data = await response.json();
-        console.log('Deleted product:', data);
-        return data;
+        return await response.json();
     } catch (error) {
         console.error('Error deleting product:', error);
-        return null;
     }
 }
 
@@ -72,12 +61,9 @@ function createProductRow(product, tbody) {
     deleteButton.textContent = 'Delete';
     deleteButton.className = 'delete-btn';
     deleteButton.onclick = async () => {
-        const isConfirmed = confirm('Are you sure you want to delete this product?');
-        if (isConfirmed) {
-            const deleteResult = await deleteProduct(product.id);
-            if (deleteResult) {
-                row.remove();
-            }
+        if (confirm('Are you sure you want to delete this product?')) {
+            await deleteProduct(product.id);
+            row.remove();
         }
     };
     deleteCell.appendChild(deleteButton);
@@ -87,9 +73,9 @@ function createProductRow(product, tbody) {
 async function displayAdminProducts() {
     const products = await fetchProducts();
     const adminProductContainer = document.getElementById('admin-product-container');
-    adminProductContainer.innerHTML = ''; // Clear the container
+    adminProductContainer.innerHTML = '';
 
-    if (products.length === 0) {
+    if (!products || products.length === 0) {
         adminProductContainer.textContent = 'No products available.';
         return;
     }
@@ -98,69 +84,66 @@ async function displayAdminProducts() {
     table.className = 'admin-product-table';
     const tbody = table.createTBody();
     const tableHeaders = ['ID', 'Name', 'Price', 'Image URL', 'Actions'];
-    
+
     table.appendChild(createTableHeader(tableHeaders));
     products.forEach(product => createProductRow(product, tbody));
     adminProductContainer.appendChild(table);
 }
 
-// Handle the submission of the product addition form
-async function handleProductFormSubmit(e) {
-    e.preventDefault();
-    const productName = document.getElementById('product-name').value.trim();
-    const productDescription = document.getElementById('product-description').value.trim();
-    const productPrice = parseFloat(document.getElementById('product-price').value);
-    const productImage = document.getElementById('product-image').value.trim();
+// Function to handle the form submission for adding a product
+async function handleAddProduct(event) {
+    event.preventDefault();
 
+    const productName = event.target.elements['product-name'].value;
+    const productPrice = parseFloat(event.target.elements['product-price'].value);
+    const productImage = event.target.elements['product-image'].value;
+
+    // Validate form inputs
     if (!productName || Number.isNaN(productPrice) || productPrice <= 0) {
         alert('Please fill out the name and provide a valid price for the product.');
         return;
     }
 
+    // Prepare new product data
     const products = await fetchProducts(); // Fetch existing products to generate a new ID
     const newProduct = {
-        id: generateUniqueProductId(products), // Generate unique ID for the new product
+        id: generateUniqueProductId(products),
         name: productName,
-        description: productDescription,
         price: productPrice,
         image: productImage,
     };
 
     try {
+        // Add the product
         const response = await fetch('http://localhost:3000/api/products', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+            },
             body: JSON.stringify(newProduct),
         });
         if (!response.ok) {
-            throw new Error('Error adding product');
+            throw new Error('Server responded with an error!');
         }
-        const addedProduct = await response.json();
-        console.log('Added product:', addedProduct);
+        await response.json();
         displayAdminProducts(); // Refresh the product list
     } catch (error) {
         console.error('Error adding the product:', error);
         alert('An error occurred while adding the product.');
     } finally {
-        e.target.reset(); // Reset form fields
+        // Clear the form fields
+        event.target.reset();
     }
 }
 
-// Add event listeners after the DOM content is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    // Display products when the page is fully loaded
+// Function to initialize the admin page
+function initializeAdminPage() {
     displayAdminProducts();
 
-    // Event listener for the product addition form
+    // Event listener for adding a product
     const addProductForm = document.getElementById('add-product-form');
-    addProductForm.addEventListener('submit', handleProductFormSubmit);
+    addProductForm.addEventListener('submit', handleAddProduct);
+}
 
-    // Event delegation for dynamic buttons (Orders and Terug)
-    document.addEventListener('click', function(event) {
-        if (event.target.matches('#go-to-orders')) {
-            window.location.href = '/html/orders.html';
-        } else if (event.target.matches('#go-to-home')) {
-            goToHomePage();
-        }
-    });
-});
+// Event listener for DOMContentLoaded to initialize the admin page
+document.addEventListener('DOMContentLoaded', initializeAdminPage);
