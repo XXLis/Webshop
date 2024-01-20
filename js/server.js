@@ -4,27 +4,45 @@ const fs = require('fs');
 const cors = require('cors');
 const path = require('path');
 
-// Initialize express app
 const app = express();
 const port = 3000;
 
-// Middlewares for JSON parsing and CORS
 app.use(bodyParser.json());
 app.use(cors());
 
-// Paths to product and order JSON files
 const productsPath = path.join(__dirname, '..', 'json', 'products.json');
 const ordersPath = path.join(__dirname, '..', 'json', 'orders.json');
 
-// Function to generate a new unique product ID
 function getNextProductId(products) {
     if (products.length === 0) {
         return 1;
     }
-    const maxId = Math.max(...products.map(product => product.id));
-    return maxId + 1;
+    return Math.max(...products.map(p => p.id)) + 1;
 }
 
+app.get('/api/products', (req, res) => {
+    const products = JSON.parse(fs.readFileSync(productsPath, 'utf8'));
+    res.status(200).json(products);
+});
+
+app.post('/api/products', (req, res) => {
+    const newProduct = req.body;
+    let products = JSON.parse(fs.readFileSync(productsPath, 'utf8'));
+
+    newProduct.id = getNextProductId(products);
+    products.push(newProduct);
+
+    fs.writeFileSync(productsPath, JSON.stringify(products, null, 2));
+    res.status(201).json(newProduct);
+});
+
+app.delete('/api/products/:id', (req, res) => {
+    let products = JSON.parse(fs.readFileSync(productsPath, 'utf8'));
+    products = products.filter(product => product.id !== parseInt(req.params.id));
+
+    fs.writeFileSync(productsPath, JSON.stringify(products, null, 2));
+    res.status(200).json({ message: 'Product removed' });
+});
 // GET endpoint to fetch all products
 app.get('/api/products', (req, res) => {
     try {
