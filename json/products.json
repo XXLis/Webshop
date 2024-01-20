@@ -37,21 +37,7 @@
   {
     "name": "Pig",
     "description": "test",
-    "price": 100,
-    "image": "pig.jpg",
-    "id": 14
-  },
-  {
-    "name": "Pig",
-    "description": "test",
-    "price": 101,
-    "image": "pig.jpg",
-    "id": 15
-  },
-  {
-    "name": "Pig",
-    "description": "test",
-    "price": 102,
+    "price": 12,
     "image": "pig.jpg",
     "id": 16
   }

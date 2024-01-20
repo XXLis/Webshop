@@ -1,26 +1,3 @@
 [
-  {
-    "items": [
-      {
-        "id": 9,
-        "name": "Pig",
-        "description": "pig",
-        "price": 5.57,
-        "image": "pig.jpg",
-        "quantity": 1
-      }
-    ]
-  },
-  {
-    "items": [
-      {
-        "name": "Pig",
-        "description": "test",
-        "price": 200,
-        "image": "pig.jpg",
-        "id": 14,
-        "quantity": 1
-      }
-    ]
-  }
+
 ]
