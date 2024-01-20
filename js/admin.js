@@ -1,10 +1,4 @@
-// Function to generate a unique product ID based on existing products
-function generateUniqueProductId(products) {
-    if (!products.length) return 1;
-    return Math.max(...products.map(p => p.id)) + 1;
-}
-
-// Asynchronously fetch products from the server or local file
+// Function to asynchronously fetch products from the server
 async function fetchProducts() {
     try {
         const response = await fetch('http://localhost:3000/api/products');
@@ -18,7 +12,7 @@ async function fetchProducts() {
     }
 }
 
-// Asynchronously delete a product by its ID
+// Function to asynchronously delete a product by its ID
 async function deleteProduct(productId) {
     try {
         const response = await fetch(`http://localhost:3000/api/products/${productId}`, {
@@ -34,7 +28,7 @@ async function deleteProduct(productId) {
     }
 }
 
-// Create the header row of a table
+// Function to create the header row of a table
 function createTableHeader() {
     const headers = ['ID', 'Name', 'Price', 'Image URL', 'Actions'];
     const headerRow = document.createElement('tr');
@@ -46,9 +40,8 @@ function createTableHeader() {
     return headerRow;
 }
 
-// Create a row in the product table for each product
-function createProductRow(product) {
-    const tbody = document.getElementById('admin-product-container');
+// Function to create a row in the product table for each product
+function createProductRow(product, tbody) {
     const row = tbody.insertRow();
     row.insertCell().textContent = product.id;
     row.insertCell().textContent = product.name;
@@ -67,14 +60,16 @@ function createProductRow(product) {
     deleteCell.appendChild(deleteButton);
 }
 
-// Display all products in the admin panel
+// Function to display all products in the admin panel
 async function displayAdminProducts() {
     const products = await fetchProducts();
     const adminProductContainer = document.getElementById('admin-product-container');
     adminProductContainer.innerHTML = ''; // Clear the container
 
     adminProductContainer.appendChild(createTableHeader());
-    products.forEach(product => createProductRow(product));
+    const tbody = document.createElement('tbody');
+    products.forEach(product => createProductRow(product, tbody));
+    adminProductContainer.appendChild(tbody);
 }
 
 // Function to handle the form submission for adding a product
@@ -92,9 +87,7 @@ async function handleAddProduct(event) {
         return;
     }
 
-    const products = await fetchProducts(); // Fetch existing products to generate a new ID
     const newProduct = {
-        id: generateUniqueProductId(products),
         name: productName,
         description: productDescription,
         price: productPrice,
@@ -123,19 +116,24 @@ async function handleAddProduct(event) {
     }
 }
 
-// Add event listeners after the DOM content is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    // Display products when the page is fully loaded
-    displayAdminProducts();
-
+// Function to add event listeners after the DOM content is loaded
+function initializeEventListeners() {
     // Event listener for the product addition form
     const addProductForm = document.getElementById('add-product-form');
     addProductForm.addEventListener('submit', handleAddProduct);
 
-    // Event listeners for buttons
+    // Event listeners for navigation buttons
     document.getElementById('go-to-orders').addEventListener('click', () => {
         window.location.href = '/html/orders.html'; // Update to the correct path
     });
 
-    document.getElementById('go-to-home').addEventListener('click', goToHomePage);
+    document.getElementById('go-to-home').addEventListener('click', () => {
+        window.location.href = '/html/index.html'; // Update to the correct path
+    });
+}
+
+// Initialize the admin page
+document.addEventListener('DOMContentLoaded', () => {
+    displayAdminProducts();
+    initializeEventListeners();
 });
