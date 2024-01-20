@@ -61,5 +61,12 @@
     "description": "test",
     "price": 3,
     "image": "pig.jpg"
+  },
+  {
+    "id": 18,
+    "name": "Pig",
+    "description": "test",
+    "price": 400,
+    "image": "pig.jpg"
   }
 ]

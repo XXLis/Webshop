@@ -117,9 +117,7 @@ async function handleProductFormSubmit(e) {
         return;
     }
 
-    const products = await fetchProducts(); // Fetch existing products to generate a new ID
     const newProduct = {
-        id: generateUniqueProductId(products), // Generate unique ID for the new product
         name: productName,
         description: productDescription,
         price: productPrice,
@@ -135,15 +133,16 @@ async function handleProductFormSubmit(e) {
         if (!response.ok) {
             throw new Error('Error adding product');
         }
-        const addedProduct = await response.json();
-        console.log('Added product:', addedProduct);
-        alert('Product added successfully');
-        displayAdminProducts(); // Refresh the product list
+        await response.json();
+        displayAdminProducts(); // Refresh the product list immediately after adding
     } catch (error) {
         console.error('Error adding the product:', error);
         alert('An error occurred while adding the product.');
+    } finally {
+        e.target.reset(); // Clear the form fields
     }
 }
+
 
 // Add event listeners after the DOM content is loaded
 document.addEventListener('DOMContentLoaded', () => {
