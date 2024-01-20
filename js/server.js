@@ -12,53 +12,33 @@ app.use(cors());
 const productsPath = path.join(__dirname, '..', 'json', 'products.json');
 const ordersPath = path.join(__dirname, '..', 'json', 'orders.json');
 
+// Function to generate a new unique product ID
+function getNextProductId(products) {
+    if (products.length === 0) {
+        return 1;
+    }
+    const maxId = Math.max(...products.map(product => product.id));
+    return maxId + 1;
+}
 
 app.get('/api/products', (req, res) => {
-    try {
-        const products = JSON.parse(fs.readFileSync(productsPath, 'utf8'));
-        res.status(200).json(products);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Er is een fout opgetreden bij het ophalen van producten.' });
-    }
+    // ...
 });
 
 app.post('/api/products', (req, res) => {
     try {
         const newProduct = req.body;
         const products = JSON.parse(fs.readFileSync(productsPath, 'utf8'));
+        
+        // Assign a new unique ID
+        newProduct.id = getNextProductId(products);
 
-        // Find the next ID
-        const nextId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
-        newProduct.id = nextId; // Assign the next ID to the new product
-
-        products.push(newProduct); // Add the new product to the array
-        fs.writeFileSync(productsPath, JSON.stringify(products, null, 2)); // Write the updated products array to products.json
-        res.status(201).json(newProduct); // Respond with the newly added product
+        products.push(newProduct);
+        fs.writeFileSync(productsPath, JSON.stringify(products, null, 2));
+        res.status(201).json(newProduct);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Er is een fout opgetreden bij het toevoegen van het product.' });
-    }
-});
-
-
-app.post('/api/orders', (req, res) => {
-    console.log('Received new order:', req.body);
-    try {
-        const newOrder = req.body;
-        let orders = [];
-
-        if (fs.existsSync(ordersPath)) {
-            orders = JSON.parse(fs.readFileSync(ordersPath, 'utf8'));
-        }
-
-        orders.push(newOrder);
-        fs.writeFileSync(ordersPath, JSON.stringify(orders, null, 2));
-        console.log('Order added successfully:', newOrder);
-        res.status(201).json(newOrder);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Er is een fout opgetreden bij het toevoegen van de bestelling.' });
     }
 });
 
