@@ -158,5 +158,17 @@
         "quantity": 1
       }
     ]
+  },
+  {
+    "items": [
+      {
+        "id": 8,
+        "name": "Kip",
+        "description": "kip",
+        "price": 5.01,
+        "image": "kip.jpg",
+        "quantity": 1
+      }
+    ]
   }
 ]

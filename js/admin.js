@@ -1,3 +1,14 @@
+// Function to generate a unique product ID based on the current timestamp
+function generateUniqueProductId(products) {
+    let maxId = 0;
+    products.forEach(product => {
+        if (product.id > maxId) {
+            maxId = product.id;
+        }
+    });
+    return maxId + 1;
+}
+
 // Asynchronously fetch products from the server
 async function fetchProducts() {
     try {
@@ -23,10 +34,12 @@ async function deleteProduct(productId) {
         if (!response.ok) {
             throw new Error('Error deleting product');
         }
-        return await response.json();
+        const data = await response.json();
+        console.log('Deleted product:', data);
+        return data;
     } catch (error) {
         console.error('Error deleting product:', error);
-        return [];
+        return null;
     }
 }
 
@@ -34,9 +47,9 @@ async function deleteProduct(productId) {
 function createTableHeader(headers) {
     const headerRow = document.createElement('tr');
     headers.forEach(headerText => {
-        const th = document.createElement('th');
-        th.textContent = headerText;
-        headerRow.appendChild(th);
+        const headerCell = document.createElement('th');
+        headerCell.textContent = headerText;
+        headerRow.appendChild(headerCell);
     });
     return headerRow;
 }
@@ -47,128 +60,106 @@ function goToHomePage() {
 }
 
 // Create a row in the product table for each product
-function createProductRow(product) {
-    const row = document.createElement('tr');
+function createProductRow(product, tbody) {
+    const row = tbody.insertRow();
     row.insertCell().textContent = product.id;
     row.insertCell().textContent = product.name;
     row.insertCell().textContent = product.price ? `€${product.price.toFixed(2)}` : 'Price unknown';
     row.insertCell().textContent = product.image;
 
-    const actionsCell = row.insertCell();
+    const deleteCell = row.insertCell();
     const deleteButton = document.createElement('button');
     deleteButton.textContent = 'Delete';
-    deleteButton.addEventListener('click', () => handleRemoveProduct(product.id));
-    actionsCell.appendChild(deleteButton);
-
-    return row;
+    deleteButton.className = 'delete-btn';
+    deleteButton.onclick = async () => {
+        const isConfirmed = confirm('Are you sure you want to delete this product?');
+        if (isConfirmed) {
+            const deleteResult = await deleteProduct(product.id);
+            if (deleteResult) {
+                row.remove();
+            }
+        }
+    };
+    deleteCell.appendChild(deleteButton);
 }
 
 // Display all products in the admin panel
 async function displayAdminProducts() {
-    const adminProductContainer = document.getElementById('admin-product-container');
-    adminProductContainer.innerHTML = '';
-
     const products = await fetchProducts();
-    if (!products || products.length === 0) {
-        const noProductsMessage = document.createElement('p');
-        noProductsMessage.textContent = 'No products available.';
-        adminProductContainer.appendChild(noProductsMessage);
+    const adminProductContainer = document.getElementById('admin-product-container');
+    adminProductContainer.innerHTML = ''; // Clear the container
+
+    if (products.length === 0) {
+        adminProductContainer.textContent = 'No products available.';
         return;
     }
 
     const table = document.createElement('table');
-    table.classList.add('admin-product-table');
-    const headers = ['ID', 'Name', 'Price', 'Image URL', 'Actions'];
-    table.appendChild(createTableHeader(headers));
-
-    products.forEach(product => {
-        table.appendChild(createProductRow(product));
-    });
-
+    table.className = 'admin-product-table';
+    const tbody = table.createTBody();
+    const tableHeaders = ['ID', 'Name', 'Price', 'Image URL', 'Actions'];
+    
+    table.appendChild(createTableHeader(tableHeaders));
+    products.forEach(product => createProductRow(product, tbody));
     adminProductContainer.appendChild(table);
 }
 
-// Handle the removal of a product and refresh the list
-async function handleRemoveProduct(productId) {
-    const result = await deleteProduct(productId);
-    if (result) {
-        console.log('Product deleted:', productId);
-        displayAdminProducts();
+// Handle the submission of the product addition form
+async function handleProductFormSubmit(e) {
+    e.preventDefault();
+    const productName = document.getElementById('product-name').value.trim();
+    const productDescription = document.getElementById('product-description').value.trim();
+    const productPrice = parseFloat(document.getElementById('product-price').value);
+    const productImage = document.getElementById('product-image').value.trim();
+
+    if (!productName || Number.isNaN(productPrice) || productPrice <= 0) {
+        alert('Please fill out the name and provide a valid price for the product.');
+        return;
+    }
+
+    const products = await fetchProducts(); // Fetch existing products to generate a new ID
+    const newProduct = {
+        id: generateUniqueProductId(products), // Generate unique ID for the new product
+        name: productName,
+        description: productDescription,
+        price: productPrice,
+        image: productImage,
+    };
+
+    try {
+        const response = await fetch('http://localhost:3000/api/products', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newProduct),
+        });
+        if (!response.ok) {
+            throw new Error('Error adding product');
+        }
+        const addedProduct = await response.json();
+        console.log('Added product:', addedProduct);
+        alert('Product added successfully');
+        displayAdminProducts(); // Refresh the product list
+    } catch (error) {
+        console.error('Error adding the product:', error);
+        alert('An error occurred while adding the product.');
     }
 }
 
-// Event listener for page load to display products
-window.onload = displayAdminProducts;
-
-// Using event delegation for dynamically added content
-document.addEventListener('click', function(event) {
-    if (event.target.matches('#go-to-orders')) {
-        window.location.href = '/html/orders.html';
-    } else if (event.target.matches('#go-to-home')) {
-        goToHomePage();
-    }
-});
-
-// Handle the submission of the product addition form
+// Add event listeners after the DOM content is loaded
 document.addEventListener('DOMContentLoaded', () => {
+    // Display products when the page is fully loaded
+    displayAdminProducts();
+
+    // Event listener for the product addition form
     const addProductForm = document.getElementById('add-product-form');
-    addProductForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
+    addProductForm.addEventListener('submit', handleProductFormSubmit);
 
-        const productName = document.getElementById('product-name').value;
-        const productDescription = document.getElementById('product-description').value;
-        const productPrice = parseFloat(document.getElementById('product-price').value);
-        const productImage = document.getElementById('product-image').value;
-
-        if (!productName) {
-            alert('Product name is required');
-            return;
-        }
-
-        if (Number.isNaN(productPrice) || productPrice <= 0) {
-            alert('Invalid price. Please enter a valid price.');
-            return;
-        }
-
-        const newProduct = {
-            name: productName,
-            description: productDescription,
-            price: productPrice,
-            image: productImage,
-        };
-
-        try {
-            const addedProduct = await addProduct(newProduct);
-            if (addedProduct) {
-                alert('Product added successfully');
-                setTimeout(() => {
-                    displayAdminProducts();
-                }, 0);
-            }
-        } catch (error) {
-            console.error('Error adding the product:', error);
-            alert('An error occurred while adding the product.');
-        } finally {
-            addProductForm.reset();
+    // Event delegation for dynamic buttons (Orders and Terug)
+    document.addEventListener('click', function(event) {
+        if (event.target.matches('#go-to-orders')) {
+            window.location.href = '/html/orders.html';
+        } else if (event.target.matches('#go-to-home')) {
+            goToHomePage();
         }
     });
-
-    async function addProduct(productData) {
-        try {
-            const response = await fetch('http://localhost:3000/api/products', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(productData),
-            });
-            if (!response.ok) {
-                throw new Error('Error adding product');
-            }
-            return await response.json();
-        } catch (error) {
-            console.error('Error:', error);
-            throw error; // Rethrow the error to be caught in the calling function
-        }
-    }
 });
