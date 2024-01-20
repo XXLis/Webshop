@@ -1,36 +1,31 @@
-// Displays all products on the product page by creating HTML elements for each product and appending them to the container.
+// Function to display products on the web page.
 function displayProducts(products) {
     const productContainer = document.getElementById("product-container");
     productContainer.innerHTML = "";
 
     products.forEach((product) => {
-        // Create a div for each product and set its class
+        // Create and configure the elements for each product
         const productItem = document.createElement("div");
         productItem.classList.add("product-item");
 
-        // Create and configure the image for the product
         const productImage = document.createElement("img");
         productImage.src = `../foto/${product.image}`;
         productImage.alt = product.name;
 
-        // Create and set the title for the product
         const productTitle = document.createElement("h3");
         productTitle.textContent = product.name;
 
-        // Create and set the description for the product
         const productDescription = document.createElement("p");
         productDescription.textContent = product.description;
 
-        // Create and set the price for the product
         const productPrice = document.createElement("span");
         productPrice.textContent = `€${product.price.toFixed(2)}`;
 
-        // Create the 'add to cart' button and set its event listener
         const addToCartButton = document.createElement("button");
         addToCartButton.textContent = "In winkelwagen";
         addToCartButton.addEventListener("click", () => addToCart(product));
 
-        // Append all elements to the product item
+        // Append product details to the product item
         productItem.appendChild(productImage);
         productItem.appendChild(productTitle);
         productItem.appendChild(productDescription);
@@ -42,12 +37,12 @@ function displayProducts(products) {
     });
 }
 
-// Adds a product to the shopping cart in local storage or updates its quantity if it's already there.
+// Function to add a product to the shopping cart.
 function addToCart(product) {
     let cartItems = localStorage.getItem("cartItems");
     cartItems = cartItems ? JSON.parse(cartItems) : [];
 
-    // Find the product in the cart by its ID
+    // Check if the product is already in the cart
     const existingItem = cartItems.find((item) => item.id === product.id);
     if (existingItem) {
         existingItem.quantity += 1;
@@ -56,51 +51,49 @@ function addToCart(product) {
         cartItems.push(product);
     }
 
-    // Update the cart items in local storage
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
     updateCartItemCount();
 }
 
-// Updates the cart item count display by calculating the total quantity of all items.
+// Function to update the cart item count.
 function updateCartItemCount() {
     let cartItems = localStorage.getItem("cartItems");
     cartItems = cartItems ? JSON.parse(cartItems) : [];
 
-    // Calculate the total count of items in the cart
     const totalCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-
-    // Display the total count on the cart item count element
     const cartItemCount = document.getElementById("cart-item-count");
     cartItemCount.textContent = totalCount.toString();
 }
 
-// Displays cart items in the cart page by creating HTML elements for each cart item and appending them to the container.
+// Function to display cart items on the cart page.
 function displayCartItems() {
     let cartItems = localStorage.getItem("cartItems");
     cartItems = cartItems ? JSON.parse(cartItems) : [];
     const cartItemsContainer = document.getElementById("cart-items-container");
-    cartItemsContainer.innerHTML = ""; // Clear the cart items container
+    cartItemsContainer.innerHTML = ""; // Clear the container
 
     cartItems.forEach((cartItem) => {
-        // Similar process to displayProducts, but for cart items
-        // ...
-        // Append the cart item to the cart items container
+        // Create a new div element for each cart item
+        const cartItemElement = document.createElement("div");
+        cartItemElement.classList.add("cart-item");
+        
         cartItemsContainer.appendChild(cartItemElement);
     });
 }
 
-// Redirects to the home page when called. Typically used after successful actions or to redirect from admin page.
+
+// Redirects to the home page.
 function goToHomePage() {
     window.location.href = '/html/index.html';
 }
 
-// Loads products from the server and displays them on the product page.
+// Function to load products when the window is loaded.
 window.onload = loadProducts;
 
-// Initializes the cart items display. This function is called when the window loads.
+// Initializes the cart items display.
 displayCartItems();
 
-// Fetches products from the server using XMLHttpRequest and displays them by calling displayProducts.
+// Function to fetch products from a JSON file and display them.
 function loadProducts() {
     const xhr = new XMLHttpRequest();
     xhr.open("GET", "../json/products.json", true);
@@ -114,13 +107,42 @@ function loadProducts() {
     xhr.send();
 }
 
-// Checks the login status and sets event listeners for login form submission. Redirects to admin page if login is successful.
-document.addEventListener('DOMContentLoaded', function() {
+// Event listener for DOMContentLoaded to handle login.
+document.addEventListener('DOMContentLoaded', function () {
     checkLoginStatus();
-    // ...
+
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const password = document.getElementById('password').value;
+            const correctPassword = '0000';
+
+            if (password === correctPassword) {
+                const now = new Date().getTime();
+                localStorage.setItem('loggedIn', true);
+                localStorage.setItem('loginTime', now);
+                window.location.href = '../html/admin.html';
+            } else {
+                alert('Incorrect password!');
+            }
+        });
+    }
 });
 
-// Checks if the user is logged in and redirects to login page if the session has expired.
+// Function to check the login status.
 function checkLoginStatus() {
-    // ...
+    const isLoggedIn = localStorage.getItem('loggedIn');
+    const loginTime = localStorage.getItem('loginTime');
+
+    if (isLoggedIn) {
+        const now = new Date().getTime();
+        const timeLimit = 5 * 60 * 1000; // 5 minutes in milliseconds
+
+        if (now - loginTime > timeLimit) {
+            localStorage.removeItem('loggedIn');
+            localStorage.removeItem('loginTime');
+        }
+    }
 }
