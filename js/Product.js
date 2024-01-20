@@ -12,9 +12,6 @@ async function addProduct() {
         alert('Product name is required');
         return;
     }
-    if (response.ok) {
-        loadProducts(); // Ponowne załadowanie produktów po pomyślnym dodaniu
-    }
 
     // Validate product price input
     if (Number.isNaN(productPrice) || productPrice <= 0) {
@@ -46,8 +43,11 @@ async function addProduct() {
         }
 
         // Log the added product returned from the server
-        const updatedProducts = await response.json();
-        console.log('New product added:', updatedProducts);
+        const addedProduct = await response.json();
+        console.log('New product added:', addedProduct);
+
+        // Reload products on the home page
+        loadProducts(); // Reload products after successful addition
 
         // Redirect to the admin page
         goToAdminPage();
@@ -60,4 +60,32 @@ async function addProduct() {
 // Redirects to the admin page. This function is called after successfully adding a product.
 function goToAdminPage() {
     window.location.href = '../html/admin.html';
+}
+
+// Function to display products on the web page.
+function displayProducts(products) {
+    // Your existing code for displaying products...
+    // Ensure this code correctly appends product details to the DOM
+}
+
+// Function to load products when the window is loaded.
+window.onload = loadProducts;
+
+// Function to fetch products from a JSON file and display them.
+function loadProducts() {
+    // Your existing code for loading products...
+    // This function should call `displayProducts`
+}
+
+// Additional functions (addToCart, updateCartItemCount, displayCartItems, etc.)
+// ...
+
+// Event listener for DOMContentLoaded to handle login.
+document.addEventListener('DOMContentLoaded', function () {
+    // Your existing code for login handling...
+});
+
+// Function to check the login status.
+function checkLoginStatus() {
+    // Your existing code for checking login status...
 }
