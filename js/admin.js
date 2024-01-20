@@ -127,24 +127,21 @@ async function handleProductFormSubmit(e) {
     };
 
     try {
-        // Add the product
         const response = await fetch('http://localhost:3000/api/products', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(newProduct),
         });
         if (!response.ok) {
-            throw new Error('Server responded with an error!');
+            throw new Error('Error adding product');
         }
-        await response.json();
+        const addedProduct = await response.json();
+        console.log('Added product:', addedProduct);
+        alert('Product added successfully');
         displayAdminProducts(); // Refresh the product list
     } catch (error) {
         console.error('Error adding the product:', error);
         alert('An error occurred while adding the product.');
-    } finally {
-        event.target.reset(); // Clear the form fields
     }
 }
 
