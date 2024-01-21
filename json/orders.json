@@ -1,38 +1,3 @@
 [
-  {
-    "items": [
-      {
-        "id": 18,
-        "name": "test",
-        "description": "kip",
-        "price": 444,
-        "image": "kip.jpg",
-        "quantity": 1
-      }
-    ]
-  },
-  {
-    "items": [
-      {
-        "id": 13,
-        "name": "Bot",
-        "description": "Rubber bot",
-        "price": 6,
-        "image": "bot.jpeg",
-        "quantity": 1
-      }
-    ]
-  },
-  {
-    "items": [
-      {
-        "id": 13,
-        "name": "Bot",
-        "description": "Rubber bot",
-        "price": 6,
-        "image": "bot.jpeg",
-        "quantity": 1
-      }
-    ]
-  }
+ 
 ]

@@ -47,23 +47,5 @@
     "description": "duck",
     "price": 9.99,
     "image": "duck.jpg"
-  },
-  {
-    "name": "Duck",
-    "description": "duck",
-    "price": 18.99,
-    "image": "duck.jpg"
-  },
-  {
-    "name": "Duck",
-    "description": "duck",
-    "price": 13,
-    "image": "duck.jpg"
-  },
-  {
-    "name": "Duck",
-    "description": "duck",
-    "price": 12,
-    "image": "duck.jpg"
   }
 ]
