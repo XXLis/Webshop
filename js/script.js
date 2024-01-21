@@ -1,8 +1,6 @@
 // Function to display products on the web page.
 function displayProducts(products) {
     const productContainer = document.getElementById("product-container");
-    if (!productContainer) return; // Early exit if container not found
-
     productContainer.innerHTML = "";
 
     products.forEach((product) => {
@@ -11,7 +9,7 @@ function displayProducts(products) {
         productItem.classList.add("product-item");
 
         const productImage = document.createElement("img");
-        productImage.src = `foto/${product.image}`; // Changed to relative path
+        productImage.src = `../foto/${product.image}`;
         productImage.alt = product.name;
 
         const productTitle = document.createElement("h3");
@@ -97,30 +95,40 @@ displayCartItems();
 
 // Function to fetch products from a JSON file and display them.
 function loadProducts() {
-    fetch("json/products.json") // Changed to use fetch API
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(products => {
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", "../json/products.json", true);
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            const products = JSON.parse(xhr.responseText);
             displayProducts(products);
             updateCartItemCount();
-        })
-        .catch(error => {
-            console.error('Failed to fetch products:', error);
-        });
+        }
+    };
+    xhr.send();
 }
 
-// Event listener for DOMContentLoaded to handle login and product loading.
+// Event listener for DOMContentLoaded to handle login.
 document.addEventListener('DOMContentLoaded', function () {
     checkLoginStatus();
-    loadProducts(); // Moved loadProducts call here to ensure DOM is ready
-    displayCartItems(); // Initialize the cart items display
 
-    // Login form event listener and logic here...
-    // Consider using server-side authentication instead of client-side for security
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const password = document.getElementById('password').value;
+            const correctPassword = '0000';
+
+            if (password === correctPassword) {
+                const now = new Date().getTime();
+                localStorage.setItem('loggedIn', true);
+                localStorage.setItem('loginTime', now);
+                window.location.href = '../html/admin.html';
+            } else {
+                alert('Incorrect password!');
+            }
+        });
+    }
 });
 
 // Function to check the login status.
