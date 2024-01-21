@@ -95,7 +95,7 @@ displayCartItems();
 
 // Function to fetch products from a JSON file and display them.
 function loadProducts() {
-    fetch('/json/products.json') // Path relative to the root of the hosted frontend application
+    fetch('../json/products.json') // Path relative to the root of the hosted frontend application
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);

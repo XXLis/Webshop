@@ -8,37 +8,9 @@
   },
   {
     "id": 2,
-    "name": "Duck",
-    "description": "duck",
-    "price": 13,
-    "image": "duck.jpg"
-  },
-  {
-    "id": 3,
-    "name": "Duck",
-    "description": "duck",
-    "price": 14,
-    "image": "duck.jpg"
-  },
-  {
-    "id": 5,
-    "name": "Duck",
-    "description": "duck",
-    "price": 16,
-    "image": "duck.jpg"
-  },
-  {
-    "id": 6,
-    "name": "Duck",
-    "description": "duck",
-    "price": 17,
-    "image": "duck.jpg"
-  },
-  {
-    "id": 7,
-    "name": "Duck",
-    "description": "duck",
-    "price": 18,
-    "image": "duck.jpg"
+    "name": "Kip",
+    "description": "kip",
+    "price": 8,
+    "image": "kip.jpg"
   }
 ]
