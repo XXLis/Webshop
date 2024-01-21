@@ -26,7 +26,7 @@ async function fetchProducts() {
 }
 
 // Asynchronously delete a product by its ID
-async function deleteProduct(productId) {a
+async function deleteProduct(productId) {
     try {
         const response = await fetch(`http://localhost:3000/api/products/${productId}`, {
             method: 'DELETE',

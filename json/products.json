@@ -12,5 +12,19 @@
     "description": "duck",
     "price": 18,
     "image": "duck.jpg"
+  },
+  {
+    "id": 3,
+    "name": "Duck",
+    "description": "duck",
+    "price": 18,
+    "image": "duck.jpg"
+  },
+  {
+    "id": 4,
+    "name": "Duck",
+    "description": "duck",
+    "price": 18,
+    "image": "duck.jpg"
   }
 ]
