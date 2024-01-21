@@ -1,188 +1,165 @@
+// Function to generate a unique product ID based on the current timestamp
+function generateUniqueProductId(products) {
+    let maxId = 0;
+    products.forEach(product => {
+        if (product.id > maxId) {
+            maxId = product.id;
+        }
+    });
+    return maxId + 1;
+}
+
+// Asynchronously fetch products from the server
 async function fetchProducts() {
     try {
         const response = await fetch('http://localhost:3000/api/products');
         if (!response.ok) {
-            throw new Error('Fout bij het laden van producten');
+            throw new Error('Error fetching products');
         }
         const products = await response.json();
-        console.log('Opgehaalde producten:', products);
+        console.log('Fetched products:', products);
         return products;
     } catch (error) {
-        console.error('Error bij het ophalen van producten:', error);
+        console.error('Error fetching products:', error);
         return [];
     }
 }
 
-async function addProduct(productData) {
-    try {
-        const response = await fetch('http://localhost:3000/api/products', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(productData),
-        });
-
-        if (!response.ok) {
-            throw new Error('Fout bij het toevoegen van product');
-        }
-
-        return await response.json();
-    } catch (error) {
-        console.error('Error:', error);
-        return null;
-    }
-}
-
-async function deleteProduct(productId) {
+// Asynchronously delete a product by its ID
+async function deleteProduct(productId) {a
     try {
         const response = await fetch(`http://localhost:3000/api/products/${productId}`, {
             method: 'DELETE',
         });
         if (!response.ok) {
-            throw new Error('Fout bij het verwijderen van product');
+            throw new Error('Error deleting product');
         }
-        return await response.json();
+        const data = await response.json();
+        console.log('Deleted product:', data);
+        return data;
     } catch (error) {
-        console.error('Error:', error);
-        return [];
+        console.error('Error deleting product:', error);
+        return null;
     }
 }
 
+// Create the header row of a table
 function createTableHeader(headers) {
     const headerRow = document.createElement('tr');
     headers.forEach(headerText => {
-        const th = document.createElement('th');
-        th.textContent = headerText;
-        headerRow.appendChild(th);
+        const headerCell = document.createElement('th');
+        headerCell.textContent = headerText;
+        headerRow.appendChild(headerCell);
     });
     return headerRow;
 }
 
+// Redirect to the home page
 function goToHomePage() {
-    window.location.href = 'index.html';
+    window.location.href = '../html/index.html';
 }
 
-
-function createProductRow(product, onDelete) {
-    const row = document.createElement('tr');
-
+// Create a row in the product table for each product
+function createProductRow(product, tbody) {
+    const row = tbody.insertRow();
     row.insertCell().textContent = product.id;
     row.insertCell().textContent = product.name;
-    row.insertCell().textContent = `€${product.price.toFixed(2)}`;
+    row.insertCell().textContent = product.price ? `€${product.price.toFixed(2)}` : 'Price unknown';
     row.insertCell().textContent = product.image;
 
-    const actionsCell = row.insertCell();
-
+    const deleteCell = row.insertCell();
     const deleteButton = document.createElement('button');
-    deleteButton.textContent = 'Verwijderen';
-    deleteButton.addEventListener('click', () => handleRemoveProduct(product.id));
-    actionsCell.appendChild(deleteButton);
-
-    return row;
+    deleteButton.textContent = 'Delete';
+    deleteButton.className = 'delete-btn';
+    deleteButton.onclick = async () => {
+        const isConfirmed = confirm('Are you sure you want to delete this product?');
+        if (isConfirmed) {
+            const deleteResult = await deleteProduct(product.id);
+            if (deleteResult) {
+                row.remove();
+            }
+        }
+    };
+    deleteCell.appendChild(deleteButton);
 }
 
+// Display all products in the admin panel
 async function displayAdminProducts() {
-    const adminProductContainer = document.getElementById('admin-product-container');
-    adminProductContainer.innerHTML = '';
-
     const products = await fetchProducts();
-    if (!products) return;
+    const adminProductContainer = document.getElementById('admin-product-container');
+    adminProductContainer.innerHTML = ''; // Clear the container
+
+    if (products.length === 0) {
+        adminProductContainer.textContent = 'No products available.';
+        return;
+    }
 
     const table = document.createElement('table');
-    table.classList.add('admin-product-table');
-
-    const headers = ['ID', 'Naam', 'Prijs', 'Afbeelding URL', 'Acties'];
-    table.appendChild(createTableHeader(headers));
-
-    products.forEach(product => {
-        table.appendChild(createProductRow(product, handleRemoveProduct));
-    });
-
+    table.className = 'admin-product-table';
+    const tbody = table.createTBody();
+    const tableHeaders = ['ID', 'Name', 'Price', 'Image URL', 'Actions'];
+    
+    table.appendChild(createTableHeader(tableHeaders));
+    products.forEach(product => createProductRow(product, tbody));
     adminProductContainer.appendChild(table);
 }
 
-async function handleRemoveProduct(productId) {
-    const result = await deleteProduct(productId);
-    if (result) {
-        console.log('Product verwijderd:', productId);
-        displayAdminProducts();
+// Handle the submission of the product addition form
+async function handleProductFormSubmit(e) {
+    e.preventDefault();
+    const productName = document.getElementById('product-name').value.trim();
+    const productDescription = document.getElementById('product-description').value.trim();
+    const productPrice = parseFloat(document.getElementById('product-price').value);
+    const productImage = document.getElementById('product-image').value.trim();
+
+    if (!productName || Number.isNaN(productPrice) || productPrice <= 0) {
+        alert('Please fill out the name and provide a valid price for the product.');
+        return;
     }
-}
 
-window.onload = displayAdminProducts;
+    const products = await fetchProducts(); // Fetch existing products to generate a new ID
+    const newProduct = {
+        id: generateUniqueProductId(products), // Generate unique ID for the new product
+        name: productName,
+        description: productDescription,
+        price: productPrice,
+        image: productImage,
+    };
 
-// Functie om orders op te halen van de server
-async function fetchOrders() {
     try {
-        const response = await fetch('http://localhost:3000/api/orders');
+        const response = await fetch('http://localhost:3000/api/products', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newProduct),
+        });
         if (!response.ok) {
-            throw new Error('Fout bij het ophalen van orders');
+            throw new Error('Error adding product');
         }
-        const orders = await response.json();
-        console.log('Opgehaalde orders:', orders);
-        return orders;
+        const addedProduct = await response.json();
+        console.log('Added product:', addedProduct);
+        alert('Product added successfully');
+        displayAdminProducts(); // Refresh the product list
     } catch (error) {
-        console.error('Error bij het ophalen van orders:', error);
-        return [];
+        console.error('Error adding the product:', error);
+        alert('An error occurred while adding the product.');
     }
 }
 
-// Functie om producten weer te geven in de HTML-tabel
-async function displayProducts() {
-    const products = await fetchProducts();
-    const adminProductContainer = document.getElementById('admin-product-container');
-    adminProductContainer.innerHTML = '';
+// Add event listeners after the DOM content is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    // Display products when the page is fully loaded
+    displayAdminProducts();
 
-    products.forEach(product => {
-        const row = adminProductContainer.insertRow();
-        row.insertCell(0).textContent = product.id;
-        row.insertCell(1).textContent = product.name;
-        row.insertCell(2).textContent = `€${product.price.toFixed(2)}`;
-        row.insertCell(3).textContent = product.image;
-        const actionsCell = row.insertCell();
-        const deleteButton = document.createElement('button');
-        deleteButton.textContent = 'Verwijderen';
-        deleteButton.addEventListener('click', () => handleRemoveProduct(product.id));
-        actionsCell.appendChild(deleteButton);
+    // Event listener for the product addition form
+    const addProductForm = document.getElementById('add-product-form');
+    addProductForm.addEventListener('submit', handleProductFormSubmit);
+
+    // Event delegation for dynamic buttons (Orders and Terug)
+    document.addEventListener('click', function(event) {
+        if (event.target.matches('#go-to-orders')) {
+            window.location.href = '/html/orders.html';
+        } else if (event.target.matches('#go-to-home')) {
+            goToHomePage();
+        }
     });
-}
-
-// Functie om orders weer te geven in de HTML-tabel
-async function displayOrders() {
-    const orders = await fetchOrders();
-    const ordersTable = document.getElementById('ordersTable');
-    const tbody = ordersTable.getElementsByTagName('tbody')[0];
-
-    tbody.innerHTML = '';
-
-    orders.forEach(order => {
-        let row = tbody.insertRow();
-        row.insertCell(0).innerHTML = order.id;
-        row.insertCell(1).innerHTML = order.product;
-        row.insertCell(2).innerHTML = order.quantity;
-        row.insertCell(3).innerHTML = order.total;
-    });
-}
-
-// Voeg eventlisteners toe om producten en orders weer te geven bij het laden van de pagina
-window.addEventListener('load', () => {
-    displayProducts();
-    displayOrders();
 });
-
-// Functie om de knop "Orders" toe te voegen
-function addOrdersButton() {
-    const adminHeader = document.querySelector('header');
-
-    const ordersButton = document.createElement('button');
-    ordersButton.textContent = 'Orders';
-    ordersButton.addEventListener('click', () => {
-        window.location.href = 'orders.html';
-    });
-
-    // Voeg de knop toe aan de header
-    adminHeader.appendChild(ordersButton);
-}
-
-addOrdersButton();
