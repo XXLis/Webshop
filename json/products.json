@@ -1,79 +1,9 @@
 [
   {
-    "id": 13,
-    "name": "Bot",
-    "description": "Rubber bot",
-    "price": 6,
-    "image": "bot.jpeg"
-  },
-  {
-    "id": 14,
-    "name": "Eend",
-    "description": "Eend speelgoed",
-    "price": 5.5,
+    "id": 1,
+    "name": "Duck",
+    "description": "duck",
+    "price": 17,
     "image": "duck.jpg"
-  },
-  {
-    "id": 15,
-    "name": "Kip",
-    "description": "Kip rubber speelgoed",
-    "price": 4.5,
-    "image": "kip.jpg"
-  },
-  {
-    "id": 16,
-    "name": "Pig",
-    "description": "Piggy hondenspeelgoed",
-    "price": 4.99,
-    "image": "pig.jpg"
-  },
-  {
-    "id": 17,
-    "name": "Rugbybal",
-    "description": "Rugbybal hondenspeeltje",
-    "price": 5.99,
-    "image": "bal.png"
-  },
-  {
-    "id": 18,
-    "name": "Test",
-    "description": "test2",
-    "price": 222,
-    "image": "pig.jpg"
-  },
-  {
-    "id": 19,
-    "name": "Pig",
-    "description": "test3",
-    "price": 66,
-    "image": "pig.jpg"
-  },
-  {
-    "id": 20,
-    "name": "test",
-    "description": "kip",
-    "price": 56,
-    "image": "kip.jpg"
-  },
-  {
-    "id": 21,
-    "name": "test",
-    "description": "kip",
-    "price": 500,
-    "image": "kip.jpg"
-  },
-  {
-    "id": 22,
-    "name": "test",
-    "description": "test",
-    "price": 300,
-    "image": "pig.jpg"
-  },
-  {
-    "id": 23,
-    "name": "test",
-    "description": "kip",
-    "price": 55,
-    "image": "kip.jpg"
   }
 ]
