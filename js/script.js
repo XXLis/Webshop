@@ -115,7 +115,6 @@ document.addEventListener('DOMContentLoaded', function () {
     if (loginForm) {
         loginForm.addEventListener('submit', function (event) {
             event.preventDefault();
-
             const password = document.getElementById('password').value;
             const correctPassword = '0000';
 
@@ -127,6 +126,14 @@ document.addEventListener('DOMContentLoaded', function () {
             } else {
                 alert('Incorrect password!');
             }
+        });
+    }
+
+    // "Laden producten uit JSON"
+    const loadProductsButton = document.getElementById('load-products-button-id');
+    if (loadProductsButton) {
+        loadProductsButton.addEventListener('click', function () {
+            loadProducts();
         });
     }
 });

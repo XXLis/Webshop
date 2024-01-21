@@ -14,7 +14,6 @@ async function fetchProducts() {
     try {
         const response = await fetch('http://localhost:3000/api/products', {
             headers: {
-                // Dodanie nagłówka Cache-Control, aby uniknąć buforowania przez przeglądarkę
                 'Cache-Control': 'no-cache'
             }
         });
