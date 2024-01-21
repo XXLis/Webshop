@@ -95,7 +95,7 @@ displayCartItems();
 
 // Function to fetch products from a JSON file and display them.
 function loadProducts() {
-    fetch('https://dancing-sopapillas-56809a.netlify.app/')
+    fetch('https://dancing-sopapillas-56809a.netlify.app/api/products')
  // Adjust the path as needed for your server setup
         .then(response => {
             if (!response.ok) {
