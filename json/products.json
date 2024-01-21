@@ -33,5 +33,12 @@
     "description": "duck",
     "price": 17,
     "image": "duck.jpg"
+  },
+  {
+    "id": 7,
+    "name": "Duck",
+    "description": "duck",
+    "price": 18,
+    "image": "duck.jpg"
   }
 ]
