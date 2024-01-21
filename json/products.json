@@ -33,5 +33,19 @@
     "description": "Rugbybal hondenspeeltje",
     "price": 5.99,
     "image": "bal.png"
+  },
+  {
+    "id": 18,
+    "name": "test",
+    "description": "kip",
+    "price": 444,
+    "image": "kip.jpg"
+  },
+  {
+    "id": 19,
+    "name": "Duck",
+    "description": "duck",
+    "price": 9.99,
+    "image": "duck.jpg"
   }
 ]
