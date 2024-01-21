@@ -94,18 +94,21 @@ window.onload = loadProducts;
 displayCartItems();
 
 // Function to fetch products from a JSON file and display them.
-function loadProducts() {
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", "../json/products.json", true);
-    xhr.onload = function () {
-        if (xhr.status === 200) {
-            const products = JSON.parse(xhr.responseText);
-            displayProducts(products);
-            updateCartItemCount();
+fetch("../json/products.json")
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
         }
-    };
-    xhr.send();
-}
+        return response.json();
+    })
+    .then(products => {
+        displayProducts(products);
+        updateCartItemCount();
+    })
+    .catch(error => {
+        console.error('There has been a problem with your fetch operation:', error);
+    });
+
 xhr.open("GET", `../json/products.json?t=${new Date().getTime()}`, true);
 
 // Event listener for DOMContentLoaded to handle login.
