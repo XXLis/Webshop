@@ -95,23 +95,17 @@ displayCartItems();
 
 // Function to fetch products from a JSON file and display them.
 function loadProducts() {
-    fetch('../json/products.json')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(products => {
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", "../json/products.json", true);
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            const products = JSON.parse(xhr.responseText);
             displayProducts(products);
             updateCartItemCount();
-        })
-        .catch(error => {
-            console.error('Failed to fetch products:', error);
-        });
+        }
+    };
+    xhr.send();
 }
-window.onload = loadProducts;
-
 
 // Event listener for DOMContentLoaded to handle login.
 document.addEventListener('DOMContentLoaded', function () {
