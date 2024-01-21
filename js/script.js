@@ -106,6 +106,8 @@ function loadProducts() {
     };
     xhr.send();
 }
+xhr.open("GET", `../json/products.json?t=${new Date().getTime()}`, true);
+
 
 // Event listener for DOMContentLoaded to handle login.
 document.addEventListener('DOMContentLoaded', function () {
