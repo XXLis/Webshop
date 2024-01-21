@@ -1,3 +1,16 @@
 [
- 
+  {
+    "id": 1,
+    "name": "Duck",
+    "description": "duck",
+    "price": 12,
+    "image": "duck.jpg"
+  },
+  {
+    "id": 2,
+    "name": "Duck",
+    "description": "duck",
+    "price": 13,
+    "image": "duck.jpg"
+  }
 ]
