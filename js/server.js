@@ -111,7 +111,3 @@ app.get('/api/orders', (req, res) => {
 app.listen(port, () => {
     console.log(`Server started on port ${port}`);
 });
-
-app.use('/data', express.static(path.join(__dirname, 'data')));
-
-

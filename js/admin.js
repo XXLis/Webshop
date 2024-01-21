@@ -12,10 +12,17 @@ function generateUniqueProductId(products) {
 // Asynchronously fetch products from the server
 async function fetchProducts() {
     try {
-        const response = await fetch('http://localhost:3000/api/products');
+        const response = await fetch('http://localhost:3000/api/products', {
+            headers: {
+                // Dodanie nagłówka Cache-Control, aby uniknąć buforowania przez przeglądarkę
+                'Cache-Control': 'no-cache'
+            }
+        });
+
         if (!response.ok) {
             throw new Error('Error fetching products');
         }
+
         const products = await response.json();
         console.log('Fetched products:', products);
         return products;
@@ -24,6 +31,7 @@ async function fetchProducts() {
         return [];
     }
 }
+
 
 // Asynchronously delete a product by its ID
 async function deleteProduct(productId) {
@@ -117,9 +125,7 @@ async function handleProductFormSubmit(e) {
         return;
     }
 
-    const products = await fetchProducts(); // Fetch existing products to generate a new ID
     const newProduct = {
-        id: generateUniqueProductId(products), // Generate unique ID for the new product
         name: productName,
         description: productDescription,
         price: productPrice,
@@ -135,15 +141,16 @@ async function handleProductFormSubmit(e) {
         if (!response.ok) {
             throw new Error('Error adding product');
         }
-        const addedProduct = await response.json();
-        console.log('Added product:', addedProduct);
-        alert('Product added successfully');
-        displayAdminProducts(); // Refresh the product list
+        await response.json();
+        displayAdminProducts(); // Refresh the product list immediately after adding
     } catch (error) {
         console.error('Error adding the product:', error);
         alert('An error occurred while adding the product.');
+    } finally {
+        e.target.reset(); // Clear the form fields
     }
 }
+
 
 // Add event listeners after the DOM content is loaded
 document.addEventListener('DOMContentLoaded', () => {

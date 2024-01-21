@@ -26,5 +26,12 @@
     "description": "bot",
     "price": 6,
     "image": "bot.jpeg"
+  },
+  {
+    "id": 5,
+    "name": "Bal",
+    "description": "bal",
+    "price": 5.99,
+    "image": "bal.png"
   }
 ]
