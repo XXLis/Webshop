@@ -40,5 +40,12 @@
     "price": 778,
     "image": "duck.jpg",
     "id": 6
+  },
+  {
+    "id": 7,
+    "name": "Duck",
+    "description": "duck",
+    "price": 9.99,
+    "image": "duck.jpg"
   }
 ]
