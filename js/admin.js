@@ -36,7 +36,7 @@ async function fetchProducts() {
 // Asynchronously delete a product by its ID
 async function deleteProduct(productId) {
     try {
-        const response = await fetch(`http://localhost:3000/api/products/${productId}`, {
+        const response = await fetch(`/api/products/${productId}`, {
             method: 'DELETE',
         });
         if (!response.ok) {
@@ -50,6 +50,7 @@ async function deleteProduct(productId) {
         return null;
     }
 }
+
 
 // Create the header row of a table
 function createTableHeader(headers) {
