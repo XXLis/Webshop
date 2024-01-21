@@ -56,6 +56,7 @@ De projectstructuur ziet er als volgt uit:
   - package.json
   - package-lock.json
 
+
 - De `css/` map bevat de opmaakbestanden.
 - De `html/` map bevat HTML-bestanden voor de hoofdpagina, beheerderspagina, winkelwagenpagina en bestellingenpagina.
 - De `js/` map bevat JavaScript-bestanden voor de front-end en de server, inclusief de ontbrekende bestanden zoals cart.js, Products.js en script.js.
@@ -78,6 +79,10 @@ De webshop zal beschikbaar zijn op `http://localhost:3000`.
 Om toegang te krijgen tot de beheerderspagina, gebruik het standaardwachtwoord `0000`.
 
 Het project is online beschikbaar op: <https://dancing-sopapillas-56809a.netlify.app>
+
+## Projectoverzicht
+
+Ik wilde alles netjes in mappen opslaan, maar het bestand `index.html` moest bovenaan staan, anders kon ik het niet versturen. Een grote uitdaging voor mij was om een werkende website te maken met alle functionaliteiten. Ik weet dat ik nog veel kan verbeteren als het gaat om de uitstraling van de website.
 
 Auteur:
 Adam Wejman

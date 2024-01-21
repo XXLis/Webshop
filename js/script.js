@@ -92,24 +92,20 @@ window.onload = loadProducts;
 
 // Initializes the cart items display.
 displayCartItems();
+
 // Function to fetch products from a JSON file and display them.
 function loadProducts() {
-    fetch('/json/products.json') // Adjust the path as needed for your server setup
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(products => {
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", "../json/products.json", true);
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            const products = JSON.parse(xhr.responseText);
             displayProducts(products);
             updateCartItemCount();
-        })
-        .catch(error => {
-            console.error('Failed to fetch products:', error);
-        });
+        }
+    };
+    xhr.send();
 }
-
 
 // Event listener for DOMContentLoaded to handle login.
 document.addEventListener('DOMContentLoaded', function () {
@@ -119,6 +115,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (loginForm) {
         loginForm.addEventListener('submit', function (event) {
             event.preventDefault();
+
             const password = document.getElementById('password').value;
             const correctPassword = '0000';
 
@@ -130,14 +127,6 @@ document.addEventListener('DOMContentLoaded', function () {
             } else {
                 alert('Incorrect password!');
             }
-        });
-    }
-
-    // "Laden producten uit JSON"
-    const loadProductsButton = document.getElementById('load-products-button-id');
-    if (loadProductsButton) {
-        loadProductsButton.addEventListener('click', function () {
-            loadProducts();
         });
     }
 });

@@ -4,27 +4,19 @@ const fs = require('fs');
 const cors = require('cors');
 const path = require('path');
 
-// Initializing the express application
+// Initialize express app
 const app = express();
 const port = 3000;
 
-// Applying middleware for parsing JSON and enabling CORS
+// Middlewares for JSON parsing and CORS
 app.use(bodyParser.json());
 app.use(cors());
 
-// Paths to the products and orders JSON files
+// Paths to product and order JSON files
 const productsPath = path.join(__dirname, '..', 'json', 'products.json');
 const ordersPath = path.join(__dirname, '..', 'json', 'orders.json');
 
-// Function to generate the next product ID based on the highest ID present in the list
-function getNextProductId(products) {
-    if (products.length === 0) {
-        return 1;
-    }
-    return Math.max(...products.map(p => p.id)) + 1;
-}
-
-// GET endpoint to fetch all products
+// Endpoint to get all products
 app.get('/api/products', (req, res) => {
     try {
         const products = JSON.parse(fs.readFileSync(productsPath, 'utf8'));
@@ -35,21 +27,11 @@ app.get('/api/products', (req, res) => {
     }
 });
 
-// POST endpoint to add a new product
+// Endpoint to add a new product
 app.post('/api/products', (req, res) => {
     try {
-        let products = JSON.parse(fs.readFileSync(productsPath, 'utf8'));
-        const nextId = getNextProductId(products);
-
-        // Creating new product object with 'id' as the first property
-        const newProduct = {
-            id: nextId,
-            name: req.body.name,
-            description: req.body.description,
-            price: req.body.price,
-            image: req.body.image
-        };
-
+        const newProduct = req.body;
+        const products = JSON.parse(fs.readFileSync(productsPath, 'utf8'));
         products.push(newProduct);
         fs.writeFileSync(productsPath, JSON.stringify(products, null, 2));
         res.status(201).json(newProduct);
@@ -59,22 +41,9 @@ app.post('/api/products', (req, res) => {
     }
 });
 
-// DELETE endpoint to remove a product by its ID
-app.delete('/api/products/:id', (req, res) => {
-    try {
-        let products = JSON.parse(fs.readFileSync(productsPath, 'utf8'));
-        products = products.filter(product => product.id !== parseInt(req.params.id));
-
-        fs.writeFileSync(productsPath, JSON.stringify(products, null, 2));
-        res.status(200).json({ message: 'Product removed' });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'An error occurred while removing the product.' });
-    }
-});
-
-// POST endpoint to add a new order
+// Endpoint to add a new order
 app.post('/api/orders', (req, res) => {
+    console.log('Received new order:', req.body);
     try {
         const newOrder = req.body;
         let orders = [];
@@ -85,6 +54,7 @@ app.post('/api/orders', (req, res) => {
 
         orders.push(newOrder);
         fs.writeFileSync(ordersPath, JSON.stringify(orders, null, 2));
+        console.log('Order added successfully:', newOrder);
         res.status(201).json(newOrder);
     } catch (error) {
         console.error(error);
@@ -92,7 +62,21 @@ app.post('/api/orders', (req, res) => {
     }
 });
 
-// GET endpoint to fetch all orders
+// Endpoint to delete a product by ID
+app.delete('/api/products/:id', (req, res) => {
+    try {
+        const productId = parseInt(req.params.id);
+        let products = JSON.parse(fs.readFileSync(productsPath, 'utf8'));
+        products = products.filter(product => product.id !== productId);
+        fs.writeFileSync(productsPath, JSON.stringify(products, null, 2));
+        res.status(200).json({ message: 'Product removed' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'An error occurred while removing the product.' });
+    }
+});
+
+// Endpoint to get all orders
 app.get('/api/orders', (req, res) => {
     try {
         if (!fs.existsSync(ordersPath)) {
@@ -107,7 +91,7 @@ app.get('/api/orders', (req, res) => {
     }
 });
 
-// Starting the server on the specified port
+// Start the server
 app.listen(port, () => {
     console.log(`Server started on port ${port}`);
 });
