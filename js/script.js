@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const now = new Date().getTime();
                 localStorage.setItem('loggedIn', true);
                 localStorage.setItem('loginTime', now);
-                window.location.href = 'admin.html';
+                window.location.href = '../html/admin.html';
             } else {
                 alert('Onjuist wachtwoord!');
             }
