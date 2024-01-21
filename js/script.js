@@ -95,16 +95,20 @@ displayCartItems();
 
 // Function to fetch products from a JSON file and display them.
 function loadProducts() {
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", "../json/products.json", true);
-    xhr.onload = function () {
-        if (xhr.status === 200) {
-            const products = JSON.parse(xhr.responseText);
+    fetch('/data/products.json') // Path relative to the root of the hosted frontend application
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(products => {
             displayProducts(products);
             updateCartItemCount();
-        }
-    };
-    xhr.send();
+        })
+        .catch(error => {
+            console.error('Failed to fetch products:', error);
+        });
 }
 
 
