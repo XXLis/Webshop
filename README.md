@@ -78,7 +78,7 @@ De webshop zal beschikbaar zijn op `http://localhost:3000`.
 
 Om toegang te krijgen tot de beheerderspagina, gebruik het standaardwachtwoord `0000`.
 
-Het project is online beschikbaar op: <https://dancing-sopapillas-56809a.netlify.app>
+Het project is online beschikbaar op: <https://dancing-sopapillas-56809a.netlify.app/index.html>
 
 ## Projectoverzicht
 
