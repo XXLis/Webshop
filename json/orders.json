@@ -1,3 +1,14 @@
 [
-
+  {
+    "items": [
+      {
+        "id": 1,
+        "name": "Duck",
+        "description": "duck",
+        "price": 17,
+        "image": "duck.jpg",
+        "quantity": 1
+      }
+    ]
+  }
 ]
