@@ -1,3 +1,4 @@
+
 {
   "name": "build-your-own-webshop-25e7168d-f5d7085e",
   "version": "1.0.0",
@@ -22,3 +23,4 @@
     "npm": ">=6.0.0"
   }
 }
+
